@@ -6,6 +6,7 @@
   "scripts": {
     "start": "nodemon server.js",
     "start:prod": "cross-env NODE_ENV=production node server.js",
+    "dev": "concurrently \"npm run dev --prefix Etxplore-frontend\" \"nodemon server.js\"",
     "debug": "ndb server.js"
   },
   "author": "Bisrat Beriso",
