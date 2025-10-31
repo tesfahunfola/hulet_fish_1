@@ -21,7 +21,12 @@ WORKDIR /app
 
 # Install production dependencies for backend
 COPY package*.json ./
-RUN npm install --production --silent
+# Use npm ci when a lockfile is present for reproducible installs; otherwise fall back to npm install
+RUN if [ -f package-lock.json ]; then \
+			npm ci --only=production --silent; \
+		else \
+			npm install --production --silent; \
+		fi
 
 # Copy backend source
 COPY . .
