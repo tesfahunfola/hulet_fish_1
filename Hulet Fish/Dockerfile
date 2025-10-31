@@ -3,7 +3,7 @@
 # - Stage 2 installs backend dependencies, copies the built frontend into /public and runs the server
 
 ### Stage 1: Build frontend
-FROM node:18-alpine AS frontend-builder
+FROM node:22-alpine AS frontend-builder
 WORKDIR /app/Etxplore-frontend
 
 # Install dependencies (copy package.json first for better cache layering)
@@ -16,17 +16,12 @@ RUN npm run build
 
 
 ### Stage 2: Build and run backend
-FROM node:18-alpine AS app
+FROM node:22-alpine AS app
 WORKDIR /app
 
 # Install production dependencies for backend
 COPY package*.json ./
-# Use npm ci when a lockfile is present for reproducible installs; otherwise fall back to npm install
-RUN if [ -f package-lock.json ]; then \
-			npm ci --only=production --silent; \
-		else \
-			npm install --production --silent; \
-		fi
+RUN npm ci --omit=dev
 
 # Copy backend source
 COPY . .
@@ -41,3 +36,4 @@ EXPOSE 3000
 
 # Start the server
 CMD ["node", "server.js"]
+
