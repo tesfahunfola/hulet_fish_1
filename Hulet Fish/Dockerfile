@@ -6,13 +6,17 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install all dependencies including devDependencies for building
-RUN npm ci --no-optional && \
+# First check if package-lock.json exists, if not, use npm install
+RUN if [ -f "package-lock.json" ]; then \
+      npm ci --no-optional; \
+    else \
+      npm install --no-optional; \
+    fi && \
     npm cache clean --force
 
 # Copy source code
 COPY . .
 
-# Build the application (if you have a build step, uncomment the next line)
 # RUN npm run build
 
 # Production stage
