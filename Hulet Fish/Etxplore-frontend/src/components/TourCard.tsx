@@ -23,6 +23,12 @@ interface TourCardProps {
 }
 
 const TourCard = ({ tour }: TourCardProps) => {
+  const getDifficultyDisplay = (difficulty: string, ratingsAverage: number) => {
+    if (ratingsAverage >= 4.9) return 'Highly Recommended';
+    if (difficulty === 'easy') return 'Recommended';
+    return difficulty;
+  };
+
   const difficultyColors = {
     easy: "bg-primary text-primary-foreground",
     medium: "bg-secondary text-secondary-foreground",
@@ -57,7 +63,7 @@ const TourCard = ({ tour }: TourCardProps) => {
               difficultyColors[tour.difficulty as keyof typeof difficultyColors]
             }`}
           >
-            {tour.difficulty}
+            {getDifficultyDisplay(tour.difficulty, tour.ratingsAverage)}
           </Badge>
         </div>
 
@@ -95,7 +101,7 @@ const TourCard = ({ tour }: TourCardProps) => {
             <div className="flex items-center gap-2 text-sm">
               <TrendingUp className="w-4 h-4 text-primary" />
               <span className="text-muted-foreground capitalize">
-                {tour.difficulty}
+                {getDifficultyDisplay(tour.difficulty, tour.ratingsAverage)}
               </span>
             </div>
           </div>
