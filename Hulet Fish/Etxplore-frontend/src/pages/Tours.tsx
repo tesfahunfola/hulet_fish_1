@@ -79,7 +79,7 @@ const Tours = () => {
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Filter className="w-5 h-5" />
-                <span className="font-medium">Filter by difficulty:</span>
+                <span className="font-medium">Filter by recommendation:</span>
               </div>
               <div className="flex flex-wrap gap-2">
                 <Button
@@ -90,11 +90,11 @@ const Tours = () => {
                   All Experiences
                 </Button>
                 <Button
-                  variant={difficulty === "easy" ? "adventure" : "outline"}
+                  variant={difficulty === "recommended" ? "adventure" : "outline"}
                   size="sm"
-                  onClick={() => setDifficulty("easy")}
+                  onClick={() => setDifficulty("recommended")}
                 >
-                  Easy
+                  Recommended
                 </Button>
                 <Button
                   variant={difficulty === "medium" ? "adventure" : "outline"}

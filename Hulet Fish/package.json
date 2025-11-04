@@ -9,7 +9,7 @@
     "dev": "concurrently \"npm run dev --prefix Etxplore-frontend\" \"nodemon server.js\"",
     "debug": "ndb server.js"
   },
-  "author": "Bisrat Beriso",
+  "author": "Tesfahun Fola",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.12.2",
