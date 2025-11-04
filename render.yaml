@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: hulet-fish
+    env: node
+    buildCommand: cd "Hulet Fish" && npm install && npm run build
+    startCommand: cd "Hulet Fish" && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
