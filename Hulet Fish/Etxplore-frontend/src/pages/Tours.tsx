@@ -97,18 +97,11 @@ const Tours = () => {
                   Recommended
                 </Button>
                 <Button
-                  variant={difficulty === "medium" ? "adventure" : "outline"}
+                  variant={difficulty === "highly_recommended" ? "adventure" : "outline"}
                   size="sm"
-                  onClick={() => setDifficulty("medium")}
+                  onClick={() => setDifficulty("highly_recommended")}
                 >
-                  Medium
-                </Button>
-                <Button
-                  variant={difficulty === "difficult" ? "adventure" : "outline"}
-                  size="sm"
-                  onClick={() => setDifficulty("difficult")}
-                >
-                  Difficult
+                  Highly Recommended
                 </Button>
               </div>
             </div>

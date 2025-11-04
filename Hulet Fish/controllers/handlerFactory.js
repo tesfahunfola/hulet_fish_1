@@ -71,6 +71,15 @@ exports.getAll = Model =>
     let filter = {};
     if (req.params.tourId) filter = { tour: req.params.tourId };
 
+    // Handle special difficulty filters
+    if (req.query.difficulty === 'highly_recommended') {
+      filter.ratingsAverage = { $gte: 4.9 };
+    } else if (req.query.difficulty === 'recommended') {
+      filter.difficulty = 'easy';
+    } else if (req.query.difficulty) {
+      filter.difficulty = req.query.difficulty;
+    }
+
     const features = new APIFeatures(Model.find(filter), req.query)
       .filter()
       .sort()
