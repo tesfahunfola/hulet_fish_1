@@ -74,8 +74,10 @@ exports.getAll = Model =>
     // Handle special difficulty filters
     if (req.query.difficulty === 'highly_recommended') {
       filter.ratingsAverage = { $gte: 4.9 };
+      delete req.query.difficulty;
     } else if (req.query.difficulty === 'recommended') {
       filter.difficulty = 'easy';
+      delete req.query.difficulty;
     } else if (req.query.difficulty) {
       filter.difficulty = req.query.difficulty;
     }
