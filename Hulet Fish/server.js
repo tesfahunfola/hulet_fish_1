@@ -18,7 +18,10 @@ mongoose
   .connect(DB, {
     useNewUrlParser: true,
     useCreateIndex: true,
-    useFindAndModify: false
+    useFindAndModify: false,
+    tls: true,
+    tlsInsecure: false,
+    serverSelectionTimeoutMS: 8000  
   })
   .then(() => console.log('DB connection successful!'))
   .catch(err => {
