@@ -15,11 +15,7 @@ const app = require('./app');
 const DB = process.env.DATABASE || process.env.DATABASE_LOCAL;
 
 mongoose
-  .connect(DB, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false
-  })
+  .connect(DB)
   .then(() => console.log('DB connection successful!'))
   .catch(err => {
     console.error('DB connection error:', err);

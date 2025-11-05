@@ -25,11 +25,7 @@ if (!DB) {
 
 const run = async () => {
   try {
-    await mongoose.connect(DB, {
-      useNewUrlParser: true,
-      useCreateIndex: true,
-      useFindAndModify: false
-    });
+    await mongoose.connect(DB);
     console.log('Connected to DB');
 
     // Find users that have no emailVerificationToken and are not verified

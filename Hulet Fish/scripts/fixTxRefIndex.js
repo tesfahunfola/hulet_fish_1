@@ -25,10 +25,7 @@ try {
 }
 
 (async function fixIndex() {
-  const client = new MongoClient(url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
+  const client = new MongoClient(url);
   try {
     await client.connect();
     const db = client.db(dbName);
