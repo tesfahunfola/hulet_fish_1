@@ -7,7 +7,6 @@ import { Filter, Loader2, AlertCircle } from "lucide-react";
 import { toursAPI } from "@/lib/api";
 import { motion } from "framer-motion";
 import ethiopianToursData from "@/data/ethiopian-tours.json";
-import { tours } from "@/data-dev/tours.json";
 
 const Tours = () => {
   const [difficulty, setDifficulty] = useState<string>("all");
@@ -17,7 +16,6 @@ const Tours = () => {
   const [tours, setTours] = useState<Array<Record<string, unknown>>>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [useLocalData, setUseLocalData] = useState(false);
 
   useEffect(() => {
     const fetchTours = async () => {

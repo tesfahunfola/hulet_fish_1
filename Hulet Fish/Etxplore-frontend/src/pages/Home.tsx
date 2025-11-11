@@ -6,11 +6,28 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import toursData from "@/data/tours-simple.json";
+import { useState, useEffect } from "react";
+import { toursAPI } from "@/lib/api";
+import ethiopianToursData from "@/data/ethiopian-tours.json";
 
 const Home = () => {
-  // Get first 3 tours for featured section
-  const featuredTours = toursData.slice(0, 3);
+  const [featuredTours, setFeaturedTours] = useState(ethiopianToursData.slice(0, 3));
+
+  useEffect(() => {
+    const fetchFeaturedTours = async () => {
+      try {
+        const response = await toursAPI.getAll({ limit: 3 });
+        if (response.data.data && response.data.data.length > 0) {
+          setFeaturedTours(response.data.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch tours from API, using local data:", error);
+        // Keep the local data as fallback
+      }
+    };
+
+    fetchFeaturedTours();
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
