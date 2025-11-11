@@ -51,6 +51,16 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
     select: false
+  },
+  region: {
+    type: String,
+    enum: ['Addis Ababa', 'Oromia', 'Amhara', 'Tigray', 'Somali', 'Afar', 'Benishangul-Gumuz', 'Gambela', 'Harari', 'Sidama', 'South West Ethiopia', 'Central Ethiopia', 'South Ethiopia', 'Other'],
+    default: 'Other'
+  },
+  gender: {
+    type: String,
+    enum: ['Male', 'Female', 'Other', 'Prefer not to say'],
+    default: 'Prefer not to say'
   }
 });
 

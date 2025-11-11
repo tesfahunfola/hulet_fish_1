@@ -268,17 +268,8 @@ export const reviewsAPI = {
   },
 };
 
-// Bookings API - Note: Backend doesn't have booking endpoints yet
-// These are placeholder implementations for future booking functionality
+// Bookings API
 export const bookingsAPI = {
-  getAll: async () => {
-    // Placeholder - would need backend booking endpoints
-    throw new Error("Booking functionality not yet implemented in backend");
-  },
-  getById: async (id: string) => {
-    // Placeholder - would need backend booking endpoints
-    throw new Error("Booking functionality not yet implemented in backend");
-  },
   create: async (tourId: string) => {
     // Calls backend to create a checkout session (Chapa)
     // backend route: GET /api/v1/bookings/checkout-session/:tourId
@@ -291,6 +282,22 @@ export const bookingsAPI = {
   },
   getMyBookings: async () => {
     const response = await api.get("/bookings/me");
+    return response.data;
+  },
+};
+
+// Community Metrics API
+export const communityMetricsAPI = {
+  getAll: async () => {
+    const response = await api.get("/community-metrics");
+    return response.data;
+  },
+  getIncomeByRegion: async () => {
+    const response = await api.get("/community-metrics/income-by-region");
+    return response.data;
+  },
+  getGenderParticipation: async () => {
+    const response = await api.get("/community-metrics/gender-participation");
     return response.data;
   },
 };
