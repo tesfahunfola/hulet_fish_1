@@ -95,11 +95,11 @@ exports.login = catchAsync(async (req, res, next) => {
     // Check if email is verified.
     // If user has an email verification token it means they need to verify.
     // Allow legacy users (no verification token present) to log in.
-    if (!user.isVerified && user.emailVerificationToken) {
-      return next(
-        new AppError('Please verify your email before logging in.', 401)
-      );
-    }
+    // if (!user.isVerified && user.emailVerificationToken) {
+    //   return next(
+    //     new AppError('Please verify your email before logging in.', 401)
+    //   );
+    // }
 
     // 3) If everything ok, send token to client
     createSendToken(user, 200, res);
