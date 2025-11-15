@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
+const path = require('path');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
@@ -20,7 +21,17 @@ const app = express();
 
 // 1) GLOBAL MIDDLEWARES
 // Enable CORS
-// Allow all origins for development
+// Configure CORS origins from FRONTEND_URL (comma-separated) or fall back to common localhost dev origins
+const allowedOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(',').map(s => s.trim())
+  : [
+      'http://localhost:8080',
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'http://127.0.0.1:8080',
+      'https://hulet-fish-1-ofen.vercel.app'
+    ];
+
 app.use(
   cors({
     origin: true, // Allow all origins
@@ -75,6 +86,12 @@ if (fs.existsSync(publicDir)) {
   app.use(express.static(publicDir));
 }
 
+// Serve frontend static files if build exists (for production)
+const frontendBuildDir = `${__dirname}/Etxplore-frontend/dist`;
+if (fs.existsSync(frontendBuildDir)) {
+  app.use(express.static(frontendBuildDir));
+}
+
 // Test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
@@ -89,7 +106,28 @@ app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/bookings', bookingRouter);
 app.use('/api/v1/community-metrics', communityMetricsRouter);
 
+// SPA fallback: serve index.html for all non-API routes (allows client-side routing)
+// This handles direct access or reload on routes like /login, /signup, etc.
 app.all('*', (req, res, next) => {
+  // Skip API routes
+  if (req.originalUrl.startsWith('/api')) {
+    return next(
+      new AppError(`Can't find ${req.originalUrl} on this server!`, 404)
+    );
+  }
+
+  // If frontend build exists, serve index.html for SPA routing
+  const indexPath = path.join(
+    __dirname,
+    'Etxplore-frontend',
+    'dist',
+    'index.html'
+  );
+  if (fs.existsSync(indexPath)) {
+    return res.sendFile(indexPath);
+  }
+
+  // Otherwise, return 404
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 

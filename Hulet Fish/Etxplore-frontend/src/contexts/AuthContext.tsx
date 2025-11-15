@@ -3,9 +3,9 @@ import {
   useContext,
   useState,
   useEffect,
-  ReactNode,
-} from "react";
-import { authAPI } from "@/lib/api";
+  ReactNode
+} from 'react';
+import { authAPI } from '@/lib/api';
 
 interface User {
   id: string;
@@ -39,8 +39,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     // Check for stored auth on mount
-    const storedToken = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
+    const storedToken = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('user');
 
     if (storedToken && storedUser) {
       setToken(storedToken);
@@ -52,15 +52,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (email: string, password: string) => {
     try {
       const response = await authAPI.login(email, password);
+
       const { token: authToken, data } = response;
 
       setToken(authToken);
       setUser(data.user);
 
-      localStorage.setItem("token", authToken);
-      localStorage.setItem("user", JSON.stringify(data.user));
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || "Login failed");
+      localStorage.setItem('token', authToken);
+      localStorage.setItem('user', JSON.stringify(data.user));
+    } catch (error) {
+      console.log('error', error);
+      throw new Error(error.response?.data?.message || 'Login failed');
     }
   };
 
@@ -74,15 +76,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // Signup endpoint will create user and send verification email.
       // Do not auto-login; frontend will wait for verification.
       await authAPI.signup(name, email, password, passwordConfirm);
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || "Signup failed");
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Signup failed');
     }
   };
 
   const updateUser = (newUser: User) => {
     setUser(newUser);
     try {
-      localStorage.setItem("user", JSON.stringify(newUser));
+      localStorage.setItem('user', JSON.stringify(newUser));
     } catch (err) {
       // ignore
     }
@@ -104,7 +106,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         updateUser,
         logout,
         isAuthenticated: !!token,
-        isLoading,
+        isLoading
       }}
     >
       {children}
@@ -115,7 +117,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };

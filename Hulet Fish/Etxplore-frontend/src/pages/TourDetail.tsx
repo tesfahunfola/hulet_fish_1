@@ -1,11 +1,11 @@
-import { useParams, Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Calendar,
   Users,
@@ -16,11 +16,11 @@ import {
   ArrowLeft,
   Loader2,
   MessageSquare,
-  Check,
-} from "lucide-react";
-import { toursAPI, reviewsAPI, bookingsAPI, API_ORIGIN } from "@/lib/api";
-import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/contexts/AuthContext";
+  Check
+} from 'lucide-react';
+import { toursAPI, reviewsAPI, bookingsAPI, API_ORIGIN } from '@/lib/api';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 const TourDetail = () => {
   const { id } = useParams();
@@ -35,8 +35,8 @@ const TourDetail = () => {
   const [reviewsLoading, setReviewsLoading] = useState(false);
   const [reviewPage, setReviewPage] = useState(1);
   const [reviewLimit, setReviewLimit] = useState(5);
-  const [reviewSort, setReviewSort] = useState("-createdAt");
-  const [newReview, setNewReview] = useState("");
+  const [reviewSort, setReviewSort] = useState('-createdAt');
+  const [newReview, setNewReview] = useState('');
   const [newRating, setNewRating] = useState(0);
   const [submittingReview, setSubmittingReview] = useState(false);
   const [hasUserReviewed, setHasUserReviewed] = useState(false);
@@ -57,16 +57,14 @@ const TourDetail = () => {
           );
           const now = Date.now();
           const next =
-            dates.find((ds) => new Date(ds).getTime() > now) ||
-            dates[0] ||
-            null;
+            dates.find(ds => new Date(ds).getTime() > now) || dates[0] || null;
           setSelectedStartDate(next);
-        } catch (err: unknown) {
-          console.error("Failed to fetch tour:", err);
+        } catch (err) {
+          console.error('Failed to fetch tour:', err);
           toast({
-            title: "Error",
-            description: "Failed to load tour from server.",
-            variant: "destructive",
+            title: 'Error',
+            description: 'Failed to load tour from server.',
+            variant: 'destructive'
           });
           setTour(null);
         } finally {
@@ -114,7 +112,7 @@ const TourDetail = () => {
       const response = await reviewsAPI.getReviewsForTour(id, {
         page: reviewPage,
         limit: reviewLimit,
-        sort: reviewSort,
+        sort: reviewSort
       });
       setReviews(response.data.data);
 
@@ -131,12 +129,12 @@ const TourDetail = () => {
       } else {
         setHasUserReviewed(false);
       }
-    } catch (err: unknown) {
-      console.error("Failed to fetch reviews:", err);
+    } catch (err) {
+      console.error('Failed to fetch reviews:', err);
       toast({
-        title: "Error",
-        description: "Failed to load reviews.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to load reviews.',
+        variant: 'destructive'
       });
     } finally {
       setReviewsLoading(false);
@@ -181,26 +179,26 @@ const TourDetail = () => {
   }
 
   const difficultyColors = {
-    easy: "bg-primary text-primary-foreground",
-    medium: "bg-secondary text-secondary-foreground",
-    difficult: "bg-accent text-accent-foreground",
+    easy: 'bg-primary text-primary-foreground',
+    medium: 'bg-secondary text-secondary-foreground',
+    difficult: 'bg-accent text-accent-foreground'
   };
 
   const handleSubmitReview = async () => {
     if (!isAuthenticated) {
       toast({
-        title: "Login Required",
-        description: "Please login to write a review",
-        variant: "destructive",
+        title: 'Login Required',
+        description: 'Please login to write a review',
+        variant: 'destructive'
       });
       return;
     }
 
     if (!newReview || newRating === 0) {
       toast({
-        title: "Missing fields",
-        description: "Please fill in review and rating",
-        variant: "destructive",
+        title: 'Missing fields',
+        description: 'Please fill in review and rating',
+        variant: 'destructive'
       });
       return;
     }
@@ -209,22 +207,22 @@ const TourDetail = () => {
     try {
       await reviewsAPI.createReviewForTour(id!, {
         review: newReview,
-        rating: newRating,
+        rating: newRating
       });
       // Refetch reviews so newly created review is returned in the same format as others
       await fetchReviews();
-      setNewReview("");
+      setNewReview('');
       setNewRating(0);
       setHasUserReviewed(true);
       toast({
-        title: "Success",
-        description: "Review submitted successfully",
+        title: 'Success',
+        description: 'Review submitted successfully'
       });
-    } catch (err: any) {
+    } catch (err) {
       toast({
-        title: "Error",
-        description: err.response?.data?.message || "Failed to submit review",
-        variant: "destructive",
+        title: 'Error',
+        description: err.response?.data?.message || 'Failed to submit review',
+        variant: 'destructive'
       });
     } finally {
       setSubmittingReview(false);
@@ -236,7 +234,7 @@ const TourDetail = () => {
       <Star
         key={i}
         className={`w-4 h-4 ${
-          i < rating ? "text-secondary fill-secondary" : "text-muted"
+          i < rating ? 'text-secondary fill-secondary' : 'text-muted'
         }`}
       />
     ));
@@ -253,13 +251,13 @@ const TourDetail = () => {
             className="w-full h-full bg-center bg-cover"
             style={{
               backgroundImage: `url(${
-                tour.imageCover && String(tour.imageCover).startsWith("/")
+                tour.imageCover && String(tour.imageCover).startsWith('/')
                   ? `${API_ORIGIN}${tour.imageCover}`
                   : tour.imageCover ||
                     `https://placehold.co/1200x800/2d5a3d/ffd700?text=${encodeURIComponent(
                       tour.name
                     )}`
-              })`,
+              })`
             }}
           />
           <div className="absolute inset-0">
@@ -366,8 +364,8 @@ const TourDetail = () => {
                           {Array.isArray(tour.startDates) &&
                           tour.startDates.length > 0 ? (
                             <select
-                              value={selectedStartDate ?? ""}
-                              onChange={(e) =>
+                              value={selectedStartDate ?? ''}
+                              onChange={e =>
                                 setSelectedStartDate(e.target.value)
                               }
                               className="px-2 py-1 border"
@@ -438,12 +436,11 @@ const TourDetail = () => {
                       >
                         <img
                           src={
-                            image && String(image).startsWith("/")
+                            image && String(image).startsWith('/')
                               ? `${API_ORIGIN}${image}`
                               : image ||
-                                `https://placehold.co/400x400/2d5a3d/ffd700?text=Image+${
-                                  index + 1
-                                }`
+                                `https://placehold.co/400x400/2d5a3d/ffd700?text=Image+${index +
+                                  1}`
                           }
                           alt={`${tour.name} ${index + 1}`}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
@@ -479,8 +476,8 @@ const TourDetail = () => {
                                 key={i}
                                 className={`w-6 h-6 cursor-pointer ${
                                   i < newRating
-                                    ? "text-secondary fill-secondary"
-                                    : "text-muted"
+                                    ? 'text-secondary fill-secondary'
+                                    : 'text-muted'
                                 }`}
                                 onClick={() => setNewRating(i + 1)}
                               />
@@ -491,7 +488,7 @@ const TourDetail = () => {
                           <label className="text-sm font-medium">Review</label>
                           <Textarea
                             value={newReview}
-                            onChange={(e) => setNewReview(e.target.value)}
+                            onChange={e => setNewReview(e.target.value)}
                             placeholder="Share your experience..."
                             className="mt-1"
                             rows={4}
@@ -502,7 +499,7 @@ const TourDetail = () => {
                           disabled={submittingReview}
                           variant="hero"
                         >
-                          {submittingReview ? "Submitting..." : "Submit Review"}
+                          {submittingReview ? 'Submitting...' : 'Submit Review'}
                         </Button>
                       </CardContent>
                     </Card>
@@ -537,7 +534,7 @@ const TourDetail = () => {
                     </Card>
                   ) : (
                     <div className="space-y-4">
-                      {reviews.map((review) => (
+                      {reviews.map((review: any) => (
                         <Card
                           key={review._id ?? review.id}
                           className="border-2"
@@ -546,7 +543,7 @@ const TourDetail = () => {
                             <div className="flex items-start justify-between mb-3">
                               <div>
                                 <h4 className="font-semibold">
-                                  {review.user?.name || "Anonymous"}
+                                  {review.user?.name || 'Anonymous'}
                                 </h4>
                                 <div className="flex items-center gap-2 mt-1">
                                   {renderStars(review.rating)}
@@ -569,7 +566,7 @@ const TourDetail = () => {
                   <div className="mt-4 flex items-center gap-3">
                     <select
                       value={reviewSort}
-                      onChange={(e) => setReviewSort(e.target.value)}
+                      onChange={e => setReviewSort(e.target.value)}
                       className="px-2 py-1 border"
                     >
                       <option value="-createdAt">Newest</option>
@@ -579,7 +576,7 @@ const TourDetail = () => {
                     </select>
                     <select
                       value={reviewLimit}
-                      onChange={(e) => setReviewLimit(Number(e.target.value))}
+                      onChange={e => setReviewLimit(Number(e.target.value))}
                       className="px-2 py-1 border"
                     >
                       <option value={5}>5 / page</option>
@@ -594,7 +591,7 @@ const TourDetail = () => {
                     </button>
                     <span>Page {reviewPage}</span>
                     <button
-                      onClick={() => setReviewPage((r) => r + 1)}
+                      onClick={() => setReviewPage(r => r + 1)}
                       className="px-2 py-1 border"
                     >
                       Next
@@ -631,7 +628,7 @@ const TourDetail = () => {
                           {Array.isArray(tour.startDates) &&
                           tour.startDates.length > 0
                             ? new Date(tour.startDates[0]).toLocaleDateString()
-                            : "TBA"}
+                            : 'TBA'}
                         </span>
                       </div>
                     </div>
@@ -652,10 +649,13 @@ const TourDetail = () => {
                                 src={
                                   g.photo && String(g.photo).startsWith('/')
                                     ? `${API_ORIGIN}${g.photo}`
-                                    : g.photo && String(g.photo).startsWith('http')
+                                    : g.photo &&
+                                      String(g.photo).startsWith('http')
                                     ? g.photo
                                     : `https://i.pravatar.cc/80?u=${encodeURIComponent(
-                                          String((g._id ?? g.id ?? g.name) || 'guest')
+                                        String(
+                                          (g._id ?? g.id ?? g.name) || 'guest'
+                                        )
                                       )}`
                                 }
                                 alt={g.name}
@@ -664,7 +664,7 @@ const TourDetail = () => {
                               <div>
                                 <div className="font-semibold">{g.name}</div>
                                 <div className="text-xs text-muted-foreground">
-                                  {g.role ?? "Host"}
+                                  {g.role ?? 'Host'}
                                 </div>
                               </div>
                             </div>
@@ -735,19 +735,19 @@ const TourDetail = () => {
                         onClick={async () => {
                           if (!isAuthenticated) {
                             toast({
-                              title: "Login Required",
-                              description: "Please login to book this tour",
-                              variant: "destructive",
+                              title: 'Login Required',
+                              description: 'Please login to book this tour',
+                              variant: 'destructive'
                             });
-                            navigate("/login");
+                            navigate('/login');
                             return;
                           }
 
                           try {
                             toast({
-                              title: "Redirecting to payment...",
+                              title: 'Redirecting to payment...',
                               description:
-                                "You will be redirected to complete payment",
+                                'You will be redirected to complete payment'
                             });
                             const resp = await bookingsAPI.create(id as string);
                             const checkoutUrl =
@@ -757,18 +757,18 @@ const TourDetail = () => {
                               window.location.href = checkoutUrl;
                             } else {
                               throw new Error(
-                                "No checkout URL returned from server"
+                                'No checkout URL returned from server'
                               );
                             }
-                          } catch (err: any) {
-                            console.error("Booking init failed:", err);
+                          } catch (err) {
+                            console.error('Booking init failed:', err);
                             toast({
-                              title: "Error",
+                              title: 'Error',
                               description:
                                 err.response?.data?.message ||
                                 err.message ||
-                                "Failed to initiate booking",
-                              variant: "destructive",
+                                'Failed to initiate booking',
+                              variant: 'destructive'
                             });
                           }
                         }}
@@ -781,9 +781,9 @@ const TourDetail = () => {
                       size="lg"
                       className="w-full"
                       onClick={() => {
-                        const tourName = tour?.name ? String(tour.name) : "";
+                        const tourName = tour?.name ? String(tour.name) : '';
                         navigate(
-                          `/contact?tour=${id ?? ""}&name=${encodeURIComponent(
+                          `/contact?tour=${id ?? ''}&name=${encodeURIComponent(
                             tourName
                           )}`
                         );

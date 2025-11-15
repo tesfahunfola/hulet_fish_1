@@ -5,7 +5,13 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { LogIn, Loader2 } from 'lucide-react';
 
@@ -25,12 +31,12 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email || !password) {
       toast({
         title: 'Missing fields',
         description: 'Please enter both email and password',
-        variant: 'destructive',
+        variant: 'destructive'
       });
       return;
     }
@@ -40,14 +46,14 @@ const Login = () => {
       await login(email, password);
       toast({
         title: 'Welcome back!',
-        description: 'You have successfully logged in',
+        description: 'You have successfully logged in'
       });
       navigate('/');
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: 'Login failed',
         description: error.message || 'Invalid email or password',
-        variant: 'destructive',
+        variant: 'destructive'
       });
     } finally {
       setIsLoading(false);
@@ -64,7 +70,9 @@ const Login = () => {
       >
         <Card className="border-2 shadow-xl">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-3xl font-display text-center">Welcome Back</CardTitle>
+            <CardTitle className="text-3xl font-display text-center">
+              Welcome Back
+            </CardTitle>
             <CardDescription className="text-center">
               Enter your credentials to access your account
             </CardDescription>
@@ -78,7 +86,7 @@ const Login = () => {
                   type="email"
                   placeholder="you@example.com"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={e => setEmail(e.target.value)}
                   disabled={isLoading}
                   required
                 />
@@ -90,15 +98,15 @@ const Login = () => {
                   type="password"
                   placeholder="••••••••"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={e => setPassword(e.target.value)}
                   disabled={isLoading}
                   required
                 />
               </div>
-              <Button 
-                type="submit" 
-                variant="hero" 
-                size="lg" 
+              <Button
+                type="submit"
+                variant="hero"
+                size="lg"
                 className="w-full"
                 disabled={isLoading}
               >
@@ -116,18 +124,29 @@ const Login = () => {
               </Button>
             </form>
             <div className="mt-4 text-center text-sm">
-              <Link to="/forgot-password" className="text-primary font-semibold hover:underline">
+              <Link
+                to="/forgot-password"
+                className="text-primary font-semibold hover:underline"
+              >
                 Forgot password?
               </Link>
             </div>
             <div className="mt-2 text-center text-sm">
-              <span className="text-muted-foreground">Don't have an account? </span>
-              <Link to="/signup" className="text-primary font-semibold hover:underline">
+              <span className="text-muted-foreground">
+                Don't have an account?{' '}
+              </span>
+              <Link
+                to="/signup"
+                className="text-primary font-semibold hover:underline"
+              >
                 Sign up
               </Link>
             </div>
             <div className="mt-4 text-center">
-              <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">
+              <Link
+                to="/"
+                className="text-sm text-muted-foreground hover:text-foreground"
+              >
                 ← Back to home
               </Link>
             </div>
