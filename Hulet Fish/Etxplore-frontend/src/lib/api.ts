@@ -1,41 +1,47 @@
-import axios from "axios";
+import axios from 'axios';
 
 export const API_BASE_URL =
   (import.meta.env.VITE_API_BASE_URL as string) ||
-  "http://localhost:3000/api/v1";
+  'http://localhost:3000/api/v1';
 // API origin (used for static asset URLs returned by the backend, e.g. /img/...)
-export const API_ORIGIN = API_BASE_URL.replace(/\/api\/v1\/?$/, "");
+export const API_ORIGIN = API_BASE_URL.replace(/\/api\/v1\/?$/, '');
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    "Content-Type": "application/json",
-  },
+    'Content-Type': 'application/json'
+  }
 });
 
 // Add token to requests if available
 api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
+  config => {
+    const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => {
+  error => {
     return Promise.reject(error);
   }
 );
 
 // Handle response errors
 api.interceptors.response.use(
-  (response) => response,
-  (error) => {
+  response => response,
+  error => {
     if (error.response?.status === 401) {
-      // Token expired or invalid
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      window.location.href = "/login";
+      const requestUrl = error.config?.url ?? '';
+      const isLoginRequest = requestUrl.includes('/users/login');
+      const isAlreadyOnLoginPage = window.location.pathname === '/login';
+
+      if (!isLoginRequest && !isAlreadyOnLoginPage) {
+        // Token expired or invalid; clear stored auth and redirect to login
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.replace('/login');
+      }
     }
     return Promise.reject(error);
   }
@@ -44,7 +50,7 @@ api.interceptors.response.use(
 // Auth API
 export const authAPI = {
   login: async (email: string, password: string) => {
-    const response = await api.post("/users/login", { email, password });
+    const response = await api.post('/users/login', { email, password });
     return response.data;
   },
   signup: async (
@@ -53,11 +59,11 @@ export const authAPI = {
     password: string,
     passwordConfirm: string
   ) => {
-    const response = await api.post("/users/signup", {
+    const response = await api.post('/users/signup', {
       name,
       email,
       password,
-      passwordConfirm,
+      passwordConfirm
     });
     return response.data;
   },
@@ -66,9 +72,9 @@ export const authAPI = {
     return response.data;
   },
   logout: () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-  },
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+  }
 };
 
 // Tours API
@@ -77,11 +83,11 @@ export const toursAPI = {
     const params = new URLSearchParams();
     if (paramsObj) {
       Object.entries(paramsObj).forEach(([k, v]) => {
-        if (v !== undefined && v !== null && v !== "")
+        if (v !== undefined && v !== null && v !== '')
           params.append(k, String(v));
       });
     }
-    const url = params.toString() ? `/tours?${params.toString()}` : "/tours";
+    const url = params.toString() ? `/tours?${params.toString()}` : '/tours';
     const response = await api.get(url);
     return response.data;
   },
@@ -90,7 +96,7 @@ export const toursAPI = {
     return response.data;
   },
   create: async (tourData: any) => {
-    const response = await api.post("/tours", tourData);
+    const response = await api.post('/tours', tourData);
     return response.data;
   },
   update: async (id: string, tourData: any) => {
@@ -102,11 +108,11 @@ export const toursAPI = {
     return response.data;
   },
   getTopCheap: async () => {
-    const response = await api.get("/tours/top-5-cheap");
+    const response = await api.get('/tours/top-5-cheap');
     return response.data;
   },
   getTourStats: async () => {
-    const response = await api.get("/tours/tour-stats");
+    const response = await api.get('/tours/tour-stats');
     return response.data;
   },
   getMonthlyPlan: async (year: number) => {
@@ -116,17 +122,17 @@ export const toursAPI = {
   getToursWithin: async (
     distance: number,
     latlng: string,
-    unit: string = "mi"
+    unit: string = 'mi'
   ) => {
     const response = await api.get(
       `/tours/tours-within/${distance}/center/${latlng}/unit/${unit}`
     );
     return response.data;
   },
-  getDistances: async (latlng: string, unit: string = "mi") => {
+  getDistances: async (latlng: string, unit: string = 'mi') => {
     const response = await api.get(`/tours/distances/${latlng}/unit/${unit}`);
     return response.data;
-  },
+  }
 };
 
 // Users API
@@ -134,14 +140,14 @@ export const usersAPI = {
   getAll: async (filters?: { role?: string }) => {
     const params = new URLSearchParams();
     if (filters?.role) {
-      params.append("role", filters.role);
+      params.append('role', filters.role);
     }
-    const url = params.toString() ? `/users?${params.toString()}` : "/users";
+    const url = params.toString() ? `/users?${params.toString()}` : '/users';
     const response = await api.get(url);
     return response.data;
   },
   getMe: async () => {
-    const response = await api.get("/users/me");
+    const response = await api.get('/users/me');
     return response.data;
   },
   getById: async (id: string) => {
@@ -157,11 +163,11 @@ export const usersAPI = {
     return response.data;
   },
   updateMe: async (userData: { name?: string; email?: string }) => {
-    const response = await api.patch("/users/updateMe", userData);
+    const response = await api.patch('/users/updateMe', userData);
     return response.data;
   },
   deleteMe: async () => {
-    const response = await api.delete("/users/deleteMe");
+    const response = await api.delete('/users/deleteMe');
     return response.data;
   },
   updateMyPassword: async (
@@ -169,10 +175,10 @@ export const usersAPI = {
     password: string,
     passwordConfirm: string
   ) => {
-    const response = await api.patch("/users/updateMyPassword", {
+    const response = await api.patch('/users/updateMyPassword', {
       passwordCurrent,
       password,
-      passwordConfirm,
+      passwordConfirm
     });
     return response.data;
   },
@@ -183,11 +189,11 @@ export const usersAPI = {
     passwordConfirm: string;
     role?: string;
   }) => {
-    const response = await api.post("/users", userData);
+    const response = await api.post('/users', userData);
     return response.data;
   },
   forgotPassword: async (email: string) => {
-    const response = await api.post("/users/forgotPassword", { email });
+    const response = await api.post('/users/forgotPassword', { email });
     return response.data;
   },
   resetPassword: async (
@@ -197,10 +203,10 @@ export const usersAPI = {
   ) => {
     const response = await api.patch(`/users/resetPassword/${token}`, {
       password,
-      passwordConfirm,
+      passwordConfirm
     });
     return response.data;
-  },
+  }
 };
 
 // Reviews API
@@ -209,13 +215,13 @@ export const reviewsAPI = {
     const params = new URLSearchParams();
     if (paramsObj) {
       Object.entries(paramsObj).forEach(([k, v]) => {
-        if (v !== undefined && v !== null && v !== "")
+        if (v !== undefined && v !== null && v !== '')
           params.append(k, String(v));
       });
     }
     const url = params.toString()
       ? `/reviews?${params.toString()}`
-      : "/reviews";
+      : '/reviews';
     const response = await api.get(url);
     return response.data;
   },
@@ -228,7 +234,7 @@ export const reviewsAPI = {
     rating: number;
     tour: string;
   }) => {
-    const response = await api.post("/reviews", reviewData);
+    const response = await api.post('/reviews', reviewData);
     return response.data;
   },
   update: async (
@@ -249,7 +255,7 @@ export const reviewsAPI = {
     const params = new URLSearchParams();
     if (paramsObj) {
       Object.entries(paramsObj).forEach(([k, v]) => {
-        if (v !== undefined && v !== null && v !== "")
+        if (v !== undefined && v !== null && v !== '')
           params.append(k, String(v));
       });
     }
@@ -265,7 +271,7 @@ export const reviewsAPI = {
   ) => {
     const response = await api.post(`/tours/${tourId}/reviews`, reviewData);
     return response.data;
-  },
+  }
 };
 
 // Bookings API - Note: Backend doesn't have booking endpoints yet
@@ -273,11 +279,11 @@ export const reviewsAPI = {
 export const bookingsAPI = {
   getAll: async () => {
     // Placeholder - would need backend booking endpoints
-    throw new Error("Booking functionality not yet implemented in backend");
+    throw new Error('Booking functionality not yet implemented in backend');
   },
   getById: async (id: string) => {
     // Placeholder - would need backend booking endpoints
-    throw new Error("Booking functionality not yet implemented in backend");
+    throw new Error('Booking functionality not yet implemented in backend');
   },
   create: async (tourId: string) => {
     // Calls backend to create a checkout session (Chapa)
@@ -290,9 +296,9 @@ export const bookingsAPI = {
     return response.data;
   },
   getMyBookings: async () => {
-    const response = await api.get("/bookings/me");
+    const response = await api.get('/bookings/me');
     return response.data;
-  },
+  }
 };
 
 export default api;

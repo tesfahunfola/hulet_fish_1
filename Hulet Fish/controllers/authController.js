@@ -37,6 +37,12 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
+  // Check if user already exists
+  const existingUser = await User.findOne({ email: req.body.email });
+  if (existingUser) {
+    return next(new AppError('User already exists', 400));
+  }
+
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
@@ -71,31 +77,35 @@ exports.signup = catchAsync(async (req, res, next) => {
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  // 1) Check if email and password exist
-  if (!email || !password) {
-    return next(new AppError('Please provide email and password!', 400));
+    // 1) Check if email and password exist
+    if (!email || !password) {
+      return next(new AppError('Please provide email and password!', 400));
+    }
+    // 2) Check if user exists && password is correct
+    const user = await User.findOne({ email }).select('+password');
+
+    if (!user || !(await user.correctPassword(password, user.password))) {
+      return next(new AppError('Incorrect email or password', 401));
+    }
+
+    // Check if email is verified
+    // Check if email is verified.
+    // If user has an email verification token it means they need to verify.
+    // Allow legacy users (no verification token present) to log in.
+    if (!user.isVerified && user.emailVerificationToken) {
+      return next(
+        new AppError('Please verify your email before logging in.', 401)
+      );
+    }
+
+    // 3) If everything ok, send token to client
+    createSendToken(user, 200, res);
+  } catch (error) {
+    return next(new AppError('An error occurred while logging in', 500));
   }
-  // 2) Check if user exists && password is correct
-  const user = await User.findOne({ email }).select('+password');
-
-  if (!user || !(await user.correctPassword(password, user.password))) {
-    return next(new AppError('Incorrect email or password', 401));
-  }
-
-  // Check if email is verified
-  // Check if email is verified.
-  // If user has an email verification token it means they need to verify.
-  // Allow legacy users (no verification token present) to log in.
-  if (!user.isVerified && user.emailVerificationToken) {
-    return next(
-      new AppError('Please verify your email before logging in.', 401)
-    );
-  }
-
-  // 3) If everything ok, send token to client
-  createSendToken(user, 200, res);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
