@@ -18,15 +18,20 @@ import {
   BarChart3,
   Calendar,
   UserCheck,
+  PieChart,
+  Target,
 } from "lucide-react";
-import { toursAPI, usersAPI, reviewsAPI } from "@/lib/api";
+import { toursAPI, usersAPI, reviewsAPI, communityMetricsAPI } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart as RechartsPieChart, Cell, Pie } from "recharts";
 
 const AdminDashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [stats, setStats] = useState<any>(null);
+  const [communityMetrics, setCommunityMetrics] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -49,17 +54,20 @@ const AdminDashboard = () => {
           usersResponse,
           reviewsResponse,
           tourStatsResponse,
+          communityMetricsResponse,
         ] = await Promise.all([
           toursAPI.getAll(),
           usersAPI.getAll(),
           reviewsAPI.getAll(),
           toursAPI.getTourStats(),
+          communityMetricsAPI.getAll(),
         ]);
 
         const tours = toursResponse.data.data;
         const users = usersResponse.data.data;
         const reviews = reviewsResponse.data.data;
         const tourStats = tourStatsResponse.data.data;
+        const communityData = communityMetricsResponse.data.data;
 
         // Calculate additional stats
         const totalRevenue = tours.reduce(
@@ -88,6 +96,8 @@ const AdminDashboard = () => {
           recentReviews,
           tours: tours.slice(0, 5), // Recent tours
         });
+
+        setCommunityMetrics(communityData);
       } catch (err: any) {
         console.error("Failed to fetch stats:", err);
         setError("Failed to load dashboard statistics");
@@ -310,13 +320,132 @@ const AdminDashboard = () => {
               </Card>
             </motion.div>
 
+            {/* Community Impact Metrics */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="mb-12"
+            >
+              <Card className="border-2">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Target className="w-6 h-6" />
+                    Community Impact Metrics
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="text-center">
+                      <div className="flex items-center justify-center mb-2">
+                        <Users className="w-8 h-8 text-primary" />
+                      </div>
+                      <p className="text-2xl font-bold text-primary">
+                        {communityMetrics?.summaryStats?.totalCommunityMembers || 0}
+                      </p>
+                      <p className="text-sm text-muted-foreground">Community Members</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="flex items-center justify-center mb-2">
+                        <DollarSign className="w-8 h-8 text-primary" />
+                      </div>
+                      <p className="text-2xl font-bold text-primary">
+                        ETB {communityMetrics?.summaryStats?.totalRevenue?.toLocaleString() || 0}
+                      </p>
+                      <p className="text-sm text-muted-foreground">Total Revenue</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="flex items-center justify-center mb-2">
+                        <TrendingUp className="w-8 h-8 text-primary" />
+                      </div>
+                      <p className="text-2xl font-bold text-primary">
+                        {communityMetrics?.summaryStats?.monthlyGrowthRate?.toFixed(1) || 0}%
+                      </p>
+                      <p className="text-sm text-muted-foreground">Monthly Growth</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Charts and Analytics */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+              {/* Income by Region Chart */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 }}
+              >
+                <Card className="border-2">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <BarChart3 className="w-5 h-5" />
+                      Income by Region
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="h-64">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={communityMetrics?.incomeByRegion || []}>
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="_id" />
+                          <YAxis />
+                          <ChartTooltip content={<ChartTooltipContent />} />
+                          <Bar dataKey="totalIncome" fill="#8884d8" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              {/* Gender Participation Chart */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+              >
+                <Card className="border-2">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <PieChart className="w-5 h-5" />
+                      Gender Participation
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="h-64">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <RechartsPieChart>
+                          <Pie
+                            data={communityMetrics?.genderParticipation || []}
+                            cx="50%"
+                            cy="50%"
+                            labelLine={false}
+                            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                            outerRadius={80}
+                            fill="#8884d8"
+                            dataKey="count"
+                          >
+                            {communityMetrics?.genderParticipation?.map((entry: any, index: number) => (
+                              <Cell key={`cell-${index}`} fill={index === 0 ? "#8884d8" : "#82ca9d"} />
+                            ))}
+                          </Pie>
+                          <ChartTooltip content={<ChartTooltipContent />} />
+                        </RechartsPieChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </div>
+
             {/* Recent Tours and Reviews */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Recent Tours */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
+                transition={{ delay: 0.9 }}
               >
                 <Card className="border-2">
                   <CardHeader>
@@ -359,7 +488,7 @@ const AdminDashboard = () => {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 }}
+                transition={{ delay: 1.0 }}
               >
                 <Card className="border-2">
                   <CardHeader>

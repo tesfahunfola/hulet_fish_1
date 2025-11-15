@@ -56,7 +56,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   // Build frontend verify URL from FRONTEND_URL env var or fall back to localhost dev server
   const frontendBase = process.env.FRONTEND_URL
-    ? process.env.FRONTEND_URL.replace(/\/$/, '')
+    ? process.env.FRONTEND_URL.split(',')[0].trim().replace(/\/$/, '')
     : 'http://localhost:8080';
   const verifyURL = `${frontendBase}/verify-email/${verificationToken}`;
   try {
@@ -177,7 +177,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   // 3) Send it to user's email
   // Use frontend reset URL built from FRONTEND_URL or fallback
   const resetFrontend = process.env.FRONTEND_URL
-    ? process.env.FRONTEND_URL.replace(/\/$/, '')
+    ? process.env.FRONTEND_URL.split(',')[0].trim().replace(/\/$/, '')
     : 'http://localhost:8080';
   const resetURL = `${resetFrontend}/reset-password/${resetToken}`;
 
@@ -252,7 +252,7 @@ exports.verifyEmail = catchAsync(async (req, res, next) => {
   // Send welcome email after successful verification
   try {
     const welcomeBase = process.env.FRONTEND_URL
-      ? process.env.FRONTEND_URL.replace(/\/$/, '')
+      ? process.env.FRONTEND_URL.split(',')[0].trim().replace(/\/$/, '')
       : 'http://localhost:8080';
     const welcomeURL = `${welcomeBase}/tours`; // Redirect to tours page
     await new Email(user, welcomeURL).sendWelcome();

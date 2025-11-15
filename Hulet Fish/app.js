@@ -15,6 +15,7 @@ const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
+const communityMetricsRouter = require('./routes/communityMetricsRoutes');
 
 const app = express();
 
@@ -33,15 +34,7 @@ const allowedOrigins = process.env.FRONTEND_URL
 
 app.use(
   cors({
-    origin: function(origin, callback) {
-      // Allow requests with no origin like mobile apps or curl
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error('CORS policy: This origin is not allowed.'));
-      }
-    },
+    origin: true, // Allow all origins
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
@@ -111,6 +104,7 @@ app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/bookings', bookingRouter);
+app.use('/api/v1/community-metrics', communityMetricsRouter);
 
 // SPA fallback: serve index.html for all non-API routes (allows client-side routing)
 // This handles direct access or reload on routes like /login, /signup, etc.
