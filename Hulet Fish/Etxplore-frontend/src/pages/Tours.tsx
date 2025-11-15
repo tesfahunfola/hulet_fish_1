@@ -1,16 +1,16 @@
-import { useState, useEffect } from "react";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
-import TourCard from "@/components/TourCard";
-import { Button } from "@/components/ui/button";
-import { Filter, Loader2, AlertCircle } from "lucide-react";
-import { toursAPI } from "@/lib/api";
-import { motion } from "framer-motion";
-import ethiopianToursData from "@/data/ethiopian-tours.json";
+import { useState, useEffect } from 'react';
+import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
+import TourCard from '@/components/TourCard';
+import { Button } from '@/components/ui/button';
+import { Filter, Loader2, AlertCircle } from 'lucide-react';
+import { toursAPI } from '@/lib/api';
+import { motion } from 'framer-motion';
+import ethiopianToursData from '@/data/ethiopian-tours.json';
 
 const Tours = () => {
-  const [difficulty, setDifficulty] = useState<string>("all");
-  const [sort, setSort] = useState<string>("");
+  const [difficulty, setDifficulty] = useState<string>('all');
+  const [sort, setSort] = useState<string>('');
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(9);
   const [tours, setTours] = useState<Array<Record<string, unknown>>>([]);
@@ -23,15 +23,38 @@ const Tours = () => {
       setError(null);
       try {
         const params: Record<string, unknown> = {};
-        if (difficulty !== "all") params.difficulty = difficulty;
+        if (difficulty !== 'all') params.difficulty = difficulty;
         if (sort) params.sort = sort;
         params.page = page;
         params.limit = limit;
         const response = await toursAPI.getAll(params);
-        setTours(response.data.data);
-      } catch (err: unknown) {
-        console.error("Failed to fetch tours:", err);
-        setError("Failed to load tours from server. Please try again later.");
+
+        // if (ratingsAverage >= 4.9) return 'Highly Recommended';
+        // if (difficulty === 'easy') return 'Recommended';
+        // filter by difficulty
+        const getDifficultyDisplay = (
+          difficulty: string,
+          ratingsAverage: number
+        ) => {
+          if (ratingsAverage >= 4.9) return 'highly_recommended';
+          if (difficulty === 'easy') return 'recommended';
+          return difficulty;
+        };
+
+        if (difficulty !== 'all') {
+          setTours(
+            response.data.data.filter(
+              (tour: any) =>
+                getDifficultyDisplay(tour.difficulty, tour.ratingsAverage) ===
+                difficulty
+            )
+          );
+        } else {
+          setTours(response.data.data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch tours:', err);
+        setError('Failed to load tours from server. Please try again later.');
         setTours([]);
       } finally {
         setIsLoading(false);
@@ -43,6 +66,8 @@ const Tours = () => {
 
   // Tours are already filtered in useEffect
   const filteredTours = tours;
+
+  console.log('filteredTours', filteredTours);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -60,12 +85,14 @@ const Tours = () => {
               className="max-w-3xl"
             >
               <h1 className="font-display text-5xl md:text-6xl font-bold mb-6">
-                Discover Authentic{" "}
+                Discover Authentic{' '}
                 <span className="text-secondary">Home Experiences</span>
               </h1>
               <p className="text-lg text-primary-foreground/90">
-                Browse our carefully curated collection of immersive experiences hosted by local families. 
-                From traditional coffee ceremonies to hands-on cooking workshops, discover authentic cultural connections.
+                Browse our carefully curated collection of immersive experiences
+                hosted by local families. From traditional coffee ceremonies to
+                hands-on cooking workshops, discover authentic cultural
+                connections.
               </p>
             </motion.div>
           </div>
@@ -81,23 +108,29 @@ const Tours = () => {
               </div>
               <div className="flex flex-wrap gap-2">
                 <Button
-                  variant={difficulty === "all" ? "adventure" : "outline"}
+                  variant={difficulty === 'all' ? 'adventure' : 'outline'}
                   size="sm"
-                  onClick={() => setDifficulty("all")}
+                  onClick={() => setDifficulty('all')}
                 >
                   All Experiences
                 </Button>
                 <Button
-                  variant={difficulty === "recommended" ? "adventure" : "outline"}
+                  variant={
+                    difficulty === 'recommended' ? 'adventure' : 'outline'
+                  }
                   size="sm"
-                  onClick={() => setDifficulty("recommended")}
+                  onClick={() => setDifficulty('recommended')}
                 >
                   Recommended
                 </Button>
                 <Button
-                  variant={difficulty === "highly_recommended" ? "adventure" : "outline"}
+                  variant={
+                    difficulty === 'highly_recommended'
+                      ? 'adventure'
+                      : 'outline'
+                  }
                   size="sm"
-                  onClick={() => setDifficulty("highly_recommended")}
+                  onClick={() => setDifficulty('highly_recommended')}
                 >
                   Highly Recommended
                 </Button>
@@ -122,17 +155,17 @@ const Tours = () => {
 
             <div className="mb-6 flex items-center justify-between">
               <p className="text-muted-foreground">
-                Showing{" "}
+                Showing{' '}
                 <span className="font-semibold text-foreground">
                   {filteredTours.length}
-                </span>{" "}
+                </span>{' '}
                 experience
-                {filteredTours.length !== 1 ? "s" : ""}
+                {filteredTours.length !== 1 ? 's' : ''}
               </p>
               <div className="flex items-center gap-2">
                 <select
                   value={sort}
-                  onChange={(e) => setSort(e.target.value)}
+                  onChange={e => setSort(e.target.value)}
                   className="px-2 py-1 border"
                 >
                   <option value="">Sort</option>
@@ -143,7 +176,7 @@ const Tours = () => {
                 </select>
                 <select
                   value={limit}
-                  onChange={(e) => setLimit(Number(e.target.value))}
+                  onChange={e => setLimit(Number(e.target.value))}
                   className="px-2 py-1 border"
                 >
                   <option value={6}>6 / page</option>
@@ -161,7 +194,7 @@ const Tours = () => {
             ) : (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {filteredTours.map((tour) => (
+                  {filteredTours.map((tour: any) => (
                     <TourCard key={tour._id ?? tour.id} tour={tour} />
                   ))}
                 </div>
