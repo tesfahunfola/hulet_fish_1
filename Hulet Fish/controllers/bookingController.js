@@ -25,6 +25,14 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     txRef
   )}`;
 
+  // Chapa only allows: letters, numbers, hyphens, underscores, spaces, and dots in customization fields
+  const sanitizeForChapa = str => {
+    return (str || '')
+      .replace(/[^a-zA-Z0-9\-_ .]/g, '') // Remove disallowed characters
+      .replace(/\s+/g, ' ') // Normalize multiple spaces to single space
+      .trim();
+  };
+
   const payload = {
     amount: String(tour.price), // Chapa expects string amount
     currency: 'ETB',
@@ -42,7 +50,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
       title: (() => {
         const MAX = 16;
         const SUFFIX = ' Pay'; // keeps title short but meaningful
-        const namePart = (tour.name || 'Tour').slice(
+        const namePart = sanitizeForChapa(tour.name || 'Tour').slice(
           0,
           Math.max(0, MAX - SUFFIX.length)
         );
@@ -51,7 +59,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
       description: (() => {
         const MAX_DESC = 50;
         const PREFIX = 'Booking payment for ';
-        const namePart = (tour.name || 'Tour').slice(
+        const namePart = sanitizeForChapa(tour.name || 'Tour').slice(
           0,
           Math.max(0, MAX_DESC - PREFIX.length)
         );
@@ -97,6 +105,9 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
       // eslint-disable-next-line no-console
       console.error('Chapa Error:', respData || (err && err.message) || err);
     }
+
+    console.log('error', err);
+
     return next(new AppError('Payment initialization failed', 400));
   }
 });
