@@ -80,7 +80,13 @@ exports.getUserEcoScores = catchAsync(async (req, res, next) => {
   const userId = req.params.userId || req.user.id;
 
   const ecoScores = await EcoScore.find({ user: userId })
-    .populate('trip', 'tour')
+    .populate({
+      path: 'trip',
+      populate: {
+        path: 'tour',
+        select: 'name'
+      }
+    })
     .sort({ createdAt: -1 });
 
   res.status(200).json({

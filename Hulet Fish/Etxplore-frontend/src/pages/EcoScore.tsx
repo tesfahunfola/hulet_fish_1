@@ -14,7 +14,10 @@ interface EcoScore {
   user: string;
   trip: {
     _id: string;
-    name: string;
+    tour?: {
+      _id: string;
+      name: string;
+    };
   };
   transportEmissions: number;
   activityEmissions: number;
@@ -156,7 +159,7 @@ const EcoScore = () => {
                           <div className="flex items-center gap-3">
                             {getTransportIcon(score.transportType)}
                             <div>
-                              <h4 className="font-semibold">{score.trip?.name || 'Trip'}</h4>
+                              <h4 className="font-semibold">{score.trip?.tour?.name || 'Trip'}</h4>
                               <p className="text-sm text-gray-600">
                                 {score.origin && score.destination
                                   ? `${score.origin} → ${score.destination}`
