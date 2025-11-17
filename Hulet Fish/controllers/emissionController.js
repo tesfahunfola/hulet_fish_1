@@ -205,6 +205,17 @@ exports.purchaseCarbonOffset = catchAsync(async (req, res, next) => {
     return next(new AppError('Booking not found', 404));
   }
 
+  // Update corresponding eco score with offset information
+  await EcoScore.findOneAndUpdate(
+    { trip: bookingId },
+    {
+      offsetPurchased: true,
+      offsetAmount: amount,
+      offsetCost: cost
+    },
+    { new: true }
+  );
+
   // Update project totals
   await CarbonOffset.findByIdAndUpdate(projectId, {
     $inc: {

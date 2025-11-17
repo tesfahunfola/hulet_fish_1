@@ -30,6 +30,7 @@ interface Booking {
     name: string;
   };
   createdAt: string;
+  paid: boolean;
   ecoData?: {
     carbonOffset?: {
       purchased: boolean;
@@ -72,10 +73,10 @@ const CarbonOffset = () => {
       setSelectedBooking('');
       setOffsetAmount(0);
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast({
         title: 'Error',
-        description: error.response?.data?.message || 'Failed to purchase carbon offset.',
+        description: (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Failed to purchase carbon offset.',
         variant: 'destructive',
       });
     },
@@ -210,7 +211,7 @@ const CarbonOffset = () => {
                     </SelectTrigger>
                     <SelectContent>
                       {bookings
-                        .filter(booking => !booking.ecoData?.carbonOffset?.purchased)
+                        .filter(booking => booking.paid && !booking.ecoData?.carbonOffset?.purchased)
                         .map((booking) => (
                         <SelectItem key={booking._id} value={booking._id}>
                           <div className="flex items-center gap-2">

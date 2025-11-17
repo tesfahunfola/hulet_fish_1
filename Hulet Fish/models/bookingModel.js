@@ -87,9 +87,55 @@ const bookingSchema = new mongoose.Schema({
 bookingSchema.pre(/^find/, function(next) {
   this.populate('user').populate({
     path: 'tour',
-    select: 'name'
+    select: 'name emissionData'
   });
   next();
+});
+
+// Pre-save middleware to set isNew flag
+bookingSchema.pre('save', function(next) {
+  this._isNew = this.isNew;
+  next();
+});
+
+// Post-save middleware to create eco score for new paid bookings
+bookingSchema.post('save', async function(doc) {
+  if (!doc._isNew || !doc.paid) return; // Only for new paid bookings
+
+  try {
+    const EcoScore = require('./ecoScoreModel');
+    const existingScore = await EcoScore.findOne({ trip: doc._id });
+    if (existingScore) return; // Already exists
+
+    // Populate tour data for emission calculations
+    await doc.populate('tour', 'emissionData');
+
+    // Calculate emissions
+    const transportEmissions = 5; // Default transport emissions
+    const activityEmissions = doc.tour?.emissionData?.activityCO2 || 2.5;
+    const wasteImpact = doc.tour?.emissionData?.wasteImpact || 2;
+    const localBenefitBonus = doc.tour?.emissionData?.localBenefitBonus || 15;
+    const ecoScore = Math.min(100, 100 - transportEmissions - activityEmissions - wasteImpact + localBenefitBonus);
+
+    await EcoScore.create({
+      user: doc.user,
+      trip: doc._id,
+      transportEmissions,
+      activityEmissions,
+      wasteImpact,
+      localBenefitBonus,
+      ecoScore,
+      category: ecoScore >= 80 ? 'excellent' : ecoScore >= 60 ? 'good' : ecoScore >= 40 ? 'moderate' : 'poor',
+      origin: 'Addis Ababa',
+      destination: 'Tour Location',
+      transportType: 'diesel_minibus',
+      distance: 10,
+      travelers: 1,
+      recommendations: []
+    });
+  } catch (error) {
+    console.error('Error creating eco score for booking:', error);
+  }
 });
 
 const Booking = mongoose.model('Booking', bookingSchema);

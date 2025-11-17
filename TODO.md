@@ -25,13 +25,19 @@
 - [x] Update TODO.md to mark frontend tasks as completed
 
 ## Testing and Verification
-- [ ] Test backend APIs with Postman
-- [ ] Test frontend pages and navigation
-- [ ] Test emission calculations with sample data
-- [ ] Test eco score algorithm
-- [ ] Verify dashboards display correct data
-- [ ] Ensure no breaking changes to existing functionality
-- [ ] Test on different screen sizes (responsive design)
+- [x] Test backend APIs with Postman
+- [x] Test frontend pages and navigation
+- [x] Test emission calculations with sample data
+- [x] Test eco score algorithm
+- [x] Verify dashboards display correct data
+- [x] Ensure no breaking changes to existing functionality
+- [x] Test on different screen sizes (responsive design)
+
+## Issues Fixed
+- [x] Fixed eco-scores not updating for new bookings (post-save middleware working)
+- [x] Fixed carbon offset section not showing bookings (frontend filtering logic updated)
+- [x] Fixed carbon offset purchase API to update corresponding eco scores
+- [x] Verified carbon offset purchase simulation updates booking ecoData and project totals
 
 ## Final Steps
 - [ ] Code review and cleanup
