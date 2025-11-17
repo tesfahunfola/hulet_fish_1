@@ -243,8 +243,14 @@ exports.verifyPayment = catchAsync(async (req, res, next) => {
 
 exports.getMyBookings = catchAsync(async (req, res, next) => {
   // returns bookings for the authenticated user
-  const bookings = await Booking.find({ user: req.user._id });
+  const bookings = await Booking.find({ user: req.user._id })
+    .populate({
+      path: 'tour',
+      select: 'name'
+    })
+    .sort({ createdAt: -1 });
+
   res
     .status(200)
-    .json({ status: 'success', results: bookings.length, data: bookings });
+    .json({ status: 'success', results: bookings.length, data: { bookings } });
 });
