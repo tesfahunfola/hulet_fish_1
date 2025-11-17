@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Ethiopian Reforestation Project",
+    "description": "Tree planting project in the Bale Mountains National Park to restore native forests and combat desertification.",
+    "type": "tree_planting",
+    "location": "Bale Mountains, Ethiopia",
+    "costPerKg": 8,
+    "co2OffsetPerUnit": 1,
+    "partner": "Ethiopian Wildlife Conservation Authority",
+    "certification": "Verified Carbon Standard",
+    "images": ["/img/offsets/bale-trees.jpg"],
+    "active": true
+  },
+  {
+    "name": "Omo Valley Forest Conservation",
+    "description": "Protect and restore indigenous forests in the Omo Valley, preserving biodiversity and sequestering carbon.",
+    "type": "forest_conservation",
+    "location": "Omo Valley, Ethiopia",
+    "costPerKg": 12,
+    "co2OffsetPerUnit": 1,
+    "partner": "Omo Valley Conservation Initiative",
+    "certification": "Gold Standard",
+    "images": ["/img/offsets/omo-forest.jpg"],
+    "active": true
+  },
+  {
+    "name": "Solar Micro-Grids for Rural Communities",
+    "description": "Install solar panels and micro-grids in rural Ethiopian villages, reducing reliance on diesel generators.",
+    "type": "renewable_energy",
+    "location": "Various rural areas, Ethiopia",
+    "costPerKg": 15,
+    "co2OffsetPerUnit": 1,
+    "partner": "Ethiopian Energy Authority",
+    "certification": "Verified Carbon Standard",
+    "images": ["/img/offsets/solar-village.jpg"],
+    "active": true
+  },
+  {
+    "name": "Clean Water Systems in Gambella",
+    "description": "Build sustainable clean water systems and reduce water-related diseases in Gambella region.",
+    "type": "water_conservation",
+    "location": "Gambella Region, Ethiopia",
+    "costPerKg": 10,
+    "co2OffsetPerUnit": 1,
+    "partner": "UNICEF Ethiopia",
+    "certification": "Gold Standard",
+    "images": ["/img/offsets/water-gambella.jpg"],
+    "active": true
+  },
+  {
+    "name": "Community Development & Education",
+    "description": "Support local community development projects including education, healthcare, and sustainable agriculture.",
+    "type": "community_development",
+    "location": "Various communities, Ethiopia",
+    "costPerKg": 6,
+    "co2OffsetPerUnit": 1,
+    "partner": "Local Ethiopian NGOs",
+    "certification": "Social Carbon Standard",
+    "images": ["/img/offsets/community-dev.jpg"],
+    "active": true
+  }
+]

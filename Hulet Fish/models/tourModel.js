@@ -109,7 +109,31 @@ const tourSchema = new mongoose.Schema(
         type: mongoose.Schema.ObjectId,
         ref: 'User'
       }
-    ]
+    ],
+    // Eco Score and Carbon Offset fields
+    emissionData: {
+      activityCO2: {
+        type: Number,
+        default: 0, // kg CO2 per person for this activity
+        min: 0
+      },
+      wasteImpact: {
+        type: Number,
+        default: 0, // waste impact score (0-10)
+        min: 0,
+        max: 10
+      },
+      ecoFriendly: {
+        type: Boolean,
+        default: false
+      },
+      localBenefitBonus: {
+        type: Number,
+        default: 0, // bonus points for local benefits
+        min: 0,
+        max: 20
+      }
+    }
   },
   {
     toJSON: { virtuals: true },

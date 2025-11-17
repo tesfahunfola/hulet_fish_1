@@ -26,6 +26,9 @@ const Navigation = () => {
             <Link to="/tours" className="text-foreground hover:text-primary transition-colors font-medium">
               Experiences
             </Link>
+            <Link to="/eco-score" className="text-foreground hover:text-primary transition-colors font-medium">
+              Eco Score
+            </Link>
             <Link to="/about" className="text-foreground hover:text-primary transition-colors font-medium">
               About
             </Link>
@@ -72,15 +75,22 @@ const Navigation = () => {
               >
                 Home
               </Link>
-              <Link 
-                to="/tours" 
+              <Link
+                to="/tours"
                 className="text-foreground hover:text-primary transition-colors font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Experiences
               </Link>
-              <Link 
-                to="/about" 
+              <Link
+                to="/eco-score"
+                className="text-foreground hover:text-primary transition-colors font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Eco Score
+              </Link>
+              <Link
+                to="/about"
                 className="text-foreground hover:text-primary transition-colors font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >

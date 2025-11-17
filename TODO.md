@@ -1,24 +1,41 @@
-# Community Impact Metrics Implementation
+# Carbon-Offset and Eco Score Feature Implementation
 
-## Backend Tasks
-- [ ] Add region and gender fields to User model
-- [ ] Create communityMetricsController.js with MongoDB aggregations
-- [ ] Add community metrics API route
-- [ ] Update app.js to include new route
+## Backend Implementation
+- [x] Create EmissionFactor model (transport types, emission factors)
+- [x] Update Tour model to include emission data (activity CO2, waste impact)
+- [x] Create EcoScore model (user trip scores, calculations)
+- [x] Create CarbonOffset model (offset options, pricing)
+- [x] Update Booking model to track emissions and offsets
+- [x] Create emission calculation utilities
+- [x] Create eco score calculation algorithm
+- [x] Create APIs:
+  - [x] POST /api/emissions/calculate (calculate trip emissions)
+  - [x] GET /api/eco-score/:userId (get user eco score)
+  - [x] POST /api/carbon-offset/purchase (purchase offset)
+  - [x] GET /api/dashboard/user (user dashboard data)
+  - [x] GET /api/dashboard/host (host dashboard data)
+  - [x] GET /api/dashboard/admin (admin dashboard data)
 
-## Frontend Tasks
-- [ ] Update API client to include community metrics endpoints
-- [ ] Add Community Impact section to AdminDashboard
-- [ ] Implement bar chart for income growth by region
-- [ ] Implement pie chart for gender participation
-- [ ] Add summary panel with key statistics
+## Frontend Implementation
+- [x] Update lib/api.ts to add emissions API endpoints
+- [x] Create EcoScore page component
+- [x] Create CarbonOffset page component
+- [x] Update Navigation.tsx to add "Eco Score" link
+- [x] Update App.tsx to add routes for new pages
+- [x] Update TODO.md to mark frontend tasks as completed
 
-## Data Tasks
-- [ ] Update existing user data with region/gender information
-- [ ] Test MongoDB aggregations
-- [ ] Verify real-time data fetching
+## Testing and Verification
+- [ ] Test backend APIs with Postman
+- [ ] Test frontend pages and navigation
+- [ ] Test emission calculations with sample data
+- [ ] Test eco score algorithm
+- [ ] Verify dashboards display correct data
+- [ ] Ensure no breaking changes to existing functionality
+- [ ] Test on different screen sizes (responsive design)
 
-## Testing
-- [ ] Test charts rendering
-- [ ] Verify data accuracy
-- [ ] Check responsive design
+## Final Steps
+- [ ] Code review and cleanup
+- [ ] Update documentation
+- [ ] Commit changes locally
+- [ ] Test full application locally
+- [ ] Push to GitHub after verification

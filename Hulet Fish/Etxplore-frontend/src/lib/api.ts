@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const API_BASE_URL =
   (import.meta.env.VITE_API_BASE_URL as string) ||
-  'http://localhost:3000/api/v1';
+  (import.meta.env.PROD ? 'https://hulet-fish-tourism-1.onrender.com/api/v1' : 'http://localhost:3000/api/v1');
 // API origin (used for static asset URLs returned by the backend, e.g. /img/...)
 export const API_ORIGIN = API_BASE_URL.replace(/\/api\/v1\/?$/, '');
 
@@ -312,6 +312,51 @@ export const communityMetricsAPI = {
   },
   getGenderParticipation: async () => {
     const response = await api.get('/community-metrics/gender-participation');
+    return response.data;
+  }
+};
+
+// Emissions API
+export const emissionsAPI = {
+  getEmissionFactors: async () => {
+    const response = await api.get('/emissions/factors');
+    return response.data;
+  },
+  calculateEmissions: async (data: {
+    transportType: string;
+    distance: number;
+    travelers?: number;
+    tourId?: string;
+  }) => {
+    const response = await api.post('/emissions/calculate', data);
+    return response.data;
+  },
+  getUserEcoScores: async (userId?: string) => {
+    const url = userId ? `/emissions/eco-scores/${userId}` : '/emissions/eco-scores';
+    const response = await api.get(url);
+    return response.data;
+  },
+  createEcoScore: async (data: {
+    bookingId: string;
+    transportType: string;
+    distance: number;
+    travelers?: number;
+    origin?: string;
+    destination?: string;
+  }) => {
+    const response = await api.post('/emissions/eco-scores', data);
+    return response.data;
+  },
+  getCarbonOffsets: async () => {
+    const response = await api.get('/emissions/carbon-offsets');
+    return response.data;
+  },
+  purchaseCarbonOffset: async (data: {
+    bookingId: string;
+    projectId: string;
+    amount: number;
+  }) => {
+    const response = await api.post('/emissions/carbon-offsets/purchase', data);
     return response.data;
   }
 };

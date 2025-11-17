@@ -28,6 +28,59 @@ const bookingSchema = new mongoose.Schema({
   paid: {
     type: Boolean,
     default: true
+  },
+  // Eco Score and Carbon Offset fields
+  ecoData: {
+    origin: {
+      type: String,
+      trim: true
+    },
+    destination: {
+      type: String,
+      trim: true
+    },
+    transportType: {
+      type: String,
+      enum: [
+        'airplane',
+        'gasoline_car',
+        'diesel_minibus',
+        'bajaj',
+        'city_bus_electric',
+        'walking',
+        'bicycle'
+      ]
+    },
+    distance: {
+      type: Number, // km
+      min: 0
+    },
+    travelers: {
+      type: Number,
+      default: 1,
+      min: 1
+    },
+    // Carbon offset purchase
+    carbonOffset: {
+      purchased: {
+        type: Boolean,
+        default: false
+      },
+      amount: {
+        type: Number, // kg CO2 offset
+        default: 0,
+        min: 0
+      },
+      cost: {
+        type: Number, // cost in ETB
+        default: 0,
+        min: 0
+      },
+      project: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'CarbonOffset'
+      }
+    }
   }
 });
 

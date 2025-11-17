@@ -8,6 +8,8 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import Home from "./pages/Home";
 import Tours from "./pages/Tours";
 import TourDetail from "./pages/TourDetail";
+import EcoScore from "./pages/EcoScore";
+import CarbonOffset from "./pages/CarbonOffset";
 import About from "./pages/About";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -37,6 +39,22 @@ const App = () => (
             <Route path="/" element={<Home />} />
             <Route path="/tours" element={<Tours />} />
             <Route path="/tours/:id" element={<TourDetail />} />
+            <Route
+              path="/eco-score"
+              element={
+                <ProtectedRoute>
+                  <EcoScore />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/carbon-offset"
+              element={
+                <ProtectedRoute>
+                  <CarbonOffset />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Login />} />

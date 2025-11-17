@@ -16,6 +16,7 @@ const userRouter = require('./routes/userRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const communityMetricsRouter = require('./routes/communityMetricsRoutes');
+const emissionRouter = require('./routes/emissionRoutes');
 
 const app = express();
 
@@ -105,6 +106,7 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/bookings', bookingRouter);
 app.use('/api/v1/community-metrics', communityMetricsRouter);
+app.use('/api/v1/emissions', emissionRouter);
 
 // SPA fallback: serve index.html for all non-API routes (allows client-side routing)
 // This handles direct access or reload on routes like /login, /signup, etc.

@@ -5,6 +5,8 @@ const path = require('path');
 const Tour = require('./../../models/tourModel');
 const Review = require('./../../models/reviewModel');
 const User = require('./../../models/userModel');
+const EmissionFactor = require('./../../models/emissionFactorModel');
+const CarbonOffset = require('./../../models/carbonOffsetModel');
 
 dotenv.config({ path: path.join(__dirname, '..', '..', 'config.env') });
 
@@ -25,6 +27,12 @@ const users = JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'));
 const reviews = JSON.parse(
   fs.readFileSync(`${__dirname}/reviews.json`, 'utf-8')
 );
+const emissionFactors = JSON.parse(
+  fs.readFileSync(`${__dirname}/emissionFactors.json`, 'utf-8')
+);
+const carbonOffsets = JSON.parse(
+  fs.readFileSync(`${__dirname}/carbonOffsets.json`, 'utf-8')
+);
 
 // IMPORT DATA INTO DB
 const importData = async () => {
@@ -32,6 +40,8 @@ const importData = async () => {
     await Tour.create(tours);
     await User.create(users, { validateBeforeSave: false });
     await Review.create(reviews);
+    await EmissionFactor.create(emissionFactors);
+    await CarbonOffset.create(carbonOffsets);
     console.log('Data successfully loaded!');
   } catch (err) {
     console.log(err);
@@ -45,6 +55,8 @@ const deleteData = async () => {
     await Tour.deleteMany();
     await User.deleteMany();
     await Review.deleteMany();
+    await EmissionFactor.deleteMany();
+    await CarbonOffset.deleteMany();
     console.log('Data successfully deleted!');
   } catch (err) {
     console.log(err);

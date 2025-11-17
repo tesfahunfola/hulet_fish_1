@@ -1,0 +1,58 @@
+[
+  {
+    "transportType": "airplane",
+    "name": "Airplane",
+    "emissionFactor": 0.2,
+    "unit": "kg CO2 per km",
+    "description": "Average commercial flight emissions per passenger kilometer",
+    "active": true
+  },
+  {
+    "transportType": "gasoline_car",
+    "name": "Gasoline Car",
+    "emissionFactor": 0.18,
+    "unit": "kg CO2 per km",
+    "description": "Average gasoline car emissions per kilometer",
+    "active": true
+  },
+  {
+    "transportType": "diesel_minibus",
+    "name": "Diesel Minibus",
+    "emissionFactor": 0.12,
+    "unit": "kg CO2 per km",
+    "description": "Diesel minibus emissions per kilometer",
+    "active": true
+  },
+  {
+    "transportType": "bajaj",
+    "name": "Bajaj (3-wheeler)",
+    "emissionFactor": 0.08,
+    "unit": "kg CO2 per km",
+    "description": "Three-wheeler auto rickshaw emissions per kilometer",
+    "active": true
+  },
+  {
+    "transportType": "city_bus_electric",
+    "name": "Electric City Bus",
+    "emissionFactor": 0.03,
+    "unit": "kg CO2 per km",
+    "description": "Electric city bus with low carbon electricity",
+    "active": true
+  },
+  {
+    "transportType": "walking",
+    "name": "Walking",
+    "emissionFactor": 0,
+    "unit": "kg CO2 per km",
+    "description": "Zero emissions for walking",
+    "active": true
+  },
+  {
+    "transportType": "bicycle",
+    "name": "Bicycle",
+    "emissionFactor": 0,
+    "unit": "kg CO2 per km",
+    "description": "Zero emissions for cycling",
+    "active": true
+  }
+]
