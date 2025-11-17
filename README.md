@@ -13,6 +13,15 @@ A full-stack web application for exploring Ethiopia's rich cultural heritage and
 - **Responsive Design**: Works perfectly on all devices
 
 ## 🌟 Screenshots
+<img width="960" height="564" alt="1Screenshot 2025-11-17 125932" src="https://github.com/user-attachments/assets/e565e75b-f5be-4b15-8abd-d7e8cd78dd76" />
+
+<img width="960" height="564" alt="2Screenshot 2025-11-17 130018" src="https://github.com/user-attachments/assets/bc2aee49-03c8-4e07-9949-d8a0344ac5fb" />
+<img width="960" height="564" alt="3Screenshot 2025-11-17 130124" src="https://github.com/user-attachments/assets/a101fe1a-8521-4c8a-81e1-71cf4249c612" />
+<img width="960" height="564" alt="4Screenshot 2025-11-17 130320" src="https://github.com/user-attachments/assets/4c36408e-da67-4f4f-af3e-3aa81252a6f9" />
+
+
+<img width="960" height="564" alt="5Screenshot 2025-11-17 130528" src="https://github.com/user-attachments/assets/8742d5f2-d92b-44e8-a987-e797605c1c28" />
+
 
 
 ## 🛠️ Tech Stack
