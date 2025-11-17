@@ -12,6 +12,9 @@ A full-stack web application for exploring Ethiopia's rich cultural heritage and
 - **Community Metrics**: View collective environmental impact
 - **Responsive Design**: Works perfectly on all devices
 
+## 🌟 Screenshots
+
+
 ## 🛠️ Tech Stack
 
 ### Backend
