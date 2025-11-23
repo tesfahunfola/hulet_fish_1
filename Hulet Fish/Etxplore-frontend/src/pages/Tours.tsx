@@ -13,7 +13,7 @@ const Tours = () => {
   const [sort, setSort] = useState<string>('');
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(9);
-  const [tours, setTours] = useState<Array<Record<string, unknown>>>([]);
+  const [tours, setTours] = useState<Tour[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,29 +29,8 @@ const Tours = () => {
         params.limit = limit;
         const response = await toursAPI.getAll(params);
 
-        // if (ratingsAverage >= 4.9) return 'Highly Recommended';
-        // if (difficulty === 'easy') return 'Recommended';
-        // filter by difficulty
-        const getDifficultyDisplay = (
-          difficulty: string,
-          ratingsAverage: number
-        ) => {
-          if (ratingsAverage >= 4.9) return 'highly_recommended';
-          if (difficulty === 'easy') return 'recommended';
-          return difficulty;
-        };
+        setTours(response.data.data);
 
-        if (difficulty !== 'all') {
-          setTours(
-            response.data.data.filter(
-              (tour: any) =>
-                getDifficultyDisplay(tour.difficulty, tour.ratingsAverage) ===
-                difficulty
-            )
-          );
-        } else {
-          setTours(response.data.data);
-        }
       } catch (err) {
         console.error('Failed to fetch tours:', err);
         setError('Failed to load tours from server. Please try again later.');
@@ -64,7 +43,6 @@ const Tours = () => {
     fetchTours();
   }, [difficulty, sort, page, limit]);
 
-  // Tours are already filtered in useEffect
   const filteredTours = tours;
 
   console.log('filteredTours', filteredTours);

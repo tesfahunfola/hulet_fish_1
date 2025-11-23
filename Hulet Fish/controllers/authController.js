@@ -82,12 +82,19 @@ exports.login = catchAsync(async (req, res, next) => {
 
     // 1) Check if email and password exist
     if (!email || !password) {
+      console.log('Login failed: Missing email or password');
       return next(new AppError('Please provide email and password!', 400));
     }
     // 2) Check if user exists && password is correct
     const user = await User.findOne({ email }).select('+password');
 
-    if (!user || !(await user.correctPassword(password, user.password))) {
+    if (!user) {
+      console.log(`Login failed: No user found with email: ${email}`);
+      return next(new AppError('Incorrect email or password', 401));
+    }
+    const passwordCorrect = await user.correctPassword(password, user.password);
+    if (!passwordCorrect) {
+      console.log(`Login failed: Incorrect password for email: ${email}`);
       return next(new AppError('Incorrect email or password', 401));
     }
 
@@ -104,6 +111,7 @@ exports.login = catchAsync(async (req, res, next) => {
     // 3) If everything ok, send token to client
     createSendToken(user, 200, res);
   } catch (error) {
+    console.error('Login error:', error);
     return next(new AppError('An error occurred while logging in', 500));
   }
 });
