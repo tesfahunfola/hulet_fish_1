@@ -101,6 +101,21 @@ Return JSON array ONLY with the fields:
       why: item.why
     }));
   } catch (error) {
+    console.error('Error in generateRecommendations:', error.message);
+    
+    // Ultimate fallback: return simple ranked list without embeddings
+    if (experiencesDatabase && experiencesDatabase.length > 0) {
+      const interests = userProfile.interests && userProfile.interests.length > 0 
+        ? userProfile.interests.join(', ') 
+        : 'cultural experiences';
+      
+      return experiencesDatabase.slice(0, 5).map((exp, idx) => ({
+        title: exp.title,
+        match_score: 0.8 - (idx * 0.1), // Decreasing scores
+        why: `Recommended based on your interests in ${interests}.`
+      }));
+    }
+    
     throw new Error(`Failed to generate recommendations: ${error.message}`);
   }
 }

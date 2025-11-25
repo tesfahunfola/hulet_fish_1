@@ -231,10 +231,29 @@ const AIRecommendations = () => {
       });
     } catch (error) {
       console.error('Failed to get recommendations:', error);
-      const err = error as { response?: { data?: { message?: string } } };
+      const err = error as { response?: { data?: { message?: string }; status?: number }; message?: string };
+      
+      let errorMessage = 'Failed to generate recommendations. Please try again.';
+      
+      if (err.response?.status === 401) {
+        errorMessage = 'Please log in to use AI recommendations.';
+      } else if (err.response?.status === 500) {
+        errorMessage = 'Server error. The AI service may be unavailable. Check if GEMINI_API_KEY is configured.';
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      console.error('Error details:', {
+        status: err.response?.status,
+        message: err.response?.data?.message,
+        fullError: err
+      });
+      
       toast({
         title: 'Error',
-        description: err.response?.data?.message || 'Failed to generate recommendations. Please try again.',
+        description: errorMessage,
         variant: 'destructive'
       });
     } finally {
