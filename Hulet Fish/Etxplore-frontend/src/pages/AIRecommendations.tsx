@@ -203,7 +203,7 @@ const AIRecommendations = () => {
       }));
 
       const response = await axios.post(
-        `${API_BASE_URL}/recommend`,
+        `${API_BASE_URL.replace(/\/$/, '')}/recommend`,
         {
           userProfile: {
             interests: interestsArray,
