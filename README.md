@@ -2,7 +2,7 @@
 
 A full-stack web application for exploring Ethiopia's rich cultural heritage and natural wonders while promoting sustainable tourism through carbon offset, eco-score features, and AI-powered recommendations.
 
-**Live Demo**: https://hulet-fish-1-ofen.vercel.app/
+**Live Demo**: https://hulet-fish-1-q7w7.vercel.app/
 
 ## 🌟 Features
 
