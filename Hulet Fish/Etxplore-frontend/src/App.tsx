@@ -24,6 +24,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import TourManagement from "./pages/TourManagement";
 import UserManagement from "./pages/UserManagement";
 import Contact from "./pages/Contact";
+import AIRecommendations from "./pages/AIRecommendations";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -115,6 +116,14 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <MyReviews />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ai-recommendations"
+              element={
+                <ProtectedRoute>
+                  <AIRecommendations />
                 </ProtectedRoute>
               }
             />

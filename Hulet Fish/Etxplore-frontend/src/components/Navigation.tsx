@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Mountain, Menu, X, User } from "lucide-react";
+import { Mountain, Menu, X, User, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -28,6 +28,10 @@ const Navigation = () => {
             </Link>
             <Link to="/eco-score" className="text-foreground hover:text-primary transition-colors font-medium">
               Eco Score
+            </Link>
+            <Link to="/ai-recommendations" className="text-foreground hover:text-primary transition-colors font-medium flex items-center gap-1">
+              <Sparkles className="w-4 h-4" />
+              AI Recommend
             </Link>
             <Link to="/about" className="text-foreground hover:text-primary transition-colors font-medium">
               About
@@ -88,6 +92,14 @@ const Navigation = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Eco Score
+              </Link>
+              <Link
+                to="/ai-recommendations"
+                className="text-foreground hover:text-primary transition-colors font-medium flex items-center gap-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Sparkles className="w-4 h-4" />
+                AI Recommendations
               </Link>
               <Link
                 to="/about"
