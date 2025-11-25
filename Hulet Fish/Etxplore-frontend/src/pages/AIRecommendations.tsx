@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
@@ -11,11 +11,20 @@ import { Badge } from '@/components/ui/badge';
 import { Loader2, Sparkles, Star, TrendingUp } from 'lucide-react';
 import axios from 'axios';
 import { API_BASE_URL } from '@/lib/api';
+import { toursAPI } from '@/lib/api';
 
 interface Recommendation {
   title: string;
   match_score: number;
   why: string;
+}
+
+interface Tour {
+  _id?: string;
+  id?: string;
+  name: string;
+  summary?: string;
+  description?: string;
 }
 
 const AIRecommendations = () => {
@@ -25,45 +34,66 @@ const AIRecommendations = () => {
   const [preferences, setPreferences] = useState('authentic local experiences');
   const [reviews, setReviews] = useState('I love historical sites\nAmazing cultural experiences');
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingTours, setIsLoadingTours] = useState(true);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
+  const [availableTours, setAvailableTours] = useState<Tour[]>([]);
   const { toast } = useToast();
 
-  const sampleExperiences = [
-    {
-      title: 'Lalibela Rock-Hewn Churches',
-      description: 'Explore 11 medieval monolithic churches carved from rock in the 12th century. UNESCO World Heritage Site with incredible spiritual significance.'
-    },
-    {
-      title: 'Traditional Ethiopian Coffee Ceremony',
-      description: 'Participate in an authentic Ethiopian coffee ceremony with locals, learning about coffee culture and traditional preparation methods.'
-    },
-    {
-      title: 'Simien Mountains Trekking',
-      description: 'Trek through dramatic landscapes with unique wildlife including gelada baboons and Ethiopian wolves. UNESCO World Heritage natural site.'
-    },
-    {
-      title: 'Axum Archaeological Sites',
-      description: 'Discover ancient obelisks, royal tombs, and the legendary home of the Ark of the Covenant. Explore ancient Ethiopian civilization.'
-    },
-    {
-      title: 'Lake Tana Monasteries Tour',
-      description: 'Visit ancient island monasteries on Lake Tana, featuring beautiful religious art, illuminated manuscripts, and peaceful settings.'
-    },
-    {
-      title: 'Gondar Royal Enclosure',
-      description: 'Tour medieval castles and palaces of Ethiopian emperors, showcasing unique architectural blend of Portuguese, Indian, and local styles.'
-    },
-    {
-      title: 'Harar Old Town Walking Tour',
-      description: 'Wander through the ancient walled city with 82 mosques. Experience the famous hyena feeding ceremony at night.'
-    },
-    {
-      title: 'Danakil Depression Expedition',
-      description: 'Visit one of Earth\'s most extreme environments with active volcanoes, sulfur springs, and colorful mineral deposits.'
-    }
-  ];
+  // Fetch real tours from database on component mount
+  useEffect(() => {
+    const fetchTours = async () => {
+      try {
+        const response = await toursAPI.getAll();
+        const tours = response.data?.tours || response.tours || [];
+        setAvailableTours(tours);
+      } catch (error) {
+        console.error('Failed to fetch tours:', error);
+        toast({
+          title: 'Info',
+          description: 'Using sample experiences. Could not load tours from database.',
+          variant: 'default'
+        });
+        // Fallback to sample data if API fails
+        setAvailableTours([
+          {
+            name: 'Lalibela Rock-Hewn Churches',
+            description: 'Explore 11 medieval monolithic churches carved from rock in the 12th century. UNESCO World Heritage Site with incredible spiritual significance.'
+          },
+          {
+            name: 'Traditional Ethiopian Coffee Ceremony',
+            description: 'Participate in an authentic Ethiopian coffee ceremony with locals, learning about coffee culture and traditional preparation methods.'
+          },
+          {
+            name: 'Simien Mountains Trekking',
+            description: 'Trek through dramatic landscapes with unique wildlife including gelada baboons and Ethiopian wolves. UNESCO World Heritage natural site.'
+          },
+          {
+            name: 'Axum Archaeological Sites',
+            description: 'Discover ancient obelisks, royal tombs, and the legendary home of the Ark of the Covenant. Explore ancient Ethiopian civilization.'
+          },
+          {
+            name: 'Lake Tana Monasteries Tour',
+            description: 'Visit ancient island monasteries on Lake Tana, featuring beautiful religious art, illuminated manuscripts, and peaceful settings.'
+          }
+        ]);
+      } finally {
+        setIsLoadingTours(false);
+      }
+    };
+
+    fetchTours();
+  }, [toast]);
 
   const handleGetRecommendations = async () => {
+    if (availableTours.length === 0) {
+      toast({
+        title: 'No Experiences Available',
+        description: 'Please wait while we load available experiences.',
+        variant: 'destructive'
+      });
+      return;
+    }
+
     setIsLoading(true);
     setRecommendations([]);
 
@@ -82,6 +112,12 @@ const AIRecommendations = () => {
       const interestsArray = interests.split(',').map(i => i.trim()).filter(i => i);
       const reviewsArray = reviews.split('\n').filter(r => r.trim());
 
+      // Prepare experiences database from available tours
+      const experiencesDatabase = availableTours.map(tour => ({
+        title: tour.name,
+        description: tour.summary || tour.description || `Explore ${tour.name}`
+      }));
+
       const response = await axios.post(
         `${API_BASE_URL}/recommend`,
         {
@@ -92,7 +128,7 @@ const AIRecommendations = () => {
             preferences
           },
           userReviews: reviewsArray,
-          experiencesDatabase: sampleExperiences
+          experiencesDatabase
         },
         {
           headers: {
@@ -209,11 +245,16 @@ const AIRecommendations = () => {
 
                   <Button
                     onClick={handleGetRecommendations}
-                    disabled={isLoading}
+                    disabled={isLoading || isLoadingTours}
                     className="w-full"
                     size="lg"
                   >
-                    {isLoading ? (
+                    {isLoadingTours ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Loading Experiences...
+                      </>
+                    ) : isLoading ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                         Generating Recommendations...
@@ -221,7 +262,7 @@ const AIRecommendations = () => {
                     ) : (
                       <>
                         <Sparkles className="w-4 h-4 mr-2" />
-                        Get AI Recommendations
+                        Get AI Recommendations ({availableTours.length} experiences)
                       </>
                     )}
                   </Button>
