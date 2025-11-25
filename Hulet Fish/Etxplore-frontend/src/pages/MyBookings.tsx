@@ -33,14 +33,18 @@ const MyBookings = () => {
     setError(null);
     try {
       const resp = await bookingsAPI.getMyBookings();
-      // backend returns: { status, results, data: [bookings] }
+      // backend returns: { status: 'success', results: N, data: { bookings: [...] } }
       // bookingsAPI returns response.data, so resp is that object.
       let bookingsList: Booking[] = [];
-      if (Array.isArray(resp)) bookingsList = resp as Booking[];
-      else if (Array.isArray((resp as any).data))
+      if (Array.isArray(resp)) {
+        bookingsList = resp as Booking[];
+      } else if (resp?.data?.bookings && Array.isArray(resp.data.bookings)) {
+        bookingsList = resp.data.bookings;
+      } else if (Array.isArray((resp as any).data)) {
         bookingsList = (resp as any).data;
-      else if (Array.isArray((resp as any).data?.data))
-        bookingsList = (resp as any).data.data;
+      } else if (Array.isArray((resp as any).bookings)) {
+        bookingsList = (resp as any).bookings;
+      }
       setBookings(bookingsList);
     } catch (err) {
       console.error('Failed to fetch bookings:', err);

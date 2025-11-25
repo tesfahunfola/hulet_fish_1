@@ -58,7 +58,8 @@ const CarbonOffset = () => {
   });
 
   const carbonOffsets: CarbonOffset[] = offsetsData?.data?.carbonOffsets || [];
-  const bookings: Booking[] = bookingsData?.data?.data?.bookings || [];
+  // Backend returns: { status: 'success', results: N, data: { bookings: [...] } }
+  const bookings: Booking[] = bookingsData?.data?.bookings || [];
 
   const purchaseMutation = useMutation({
     mutationFn: (data: { bookingId: string; projectId: string; amount: number }) =>

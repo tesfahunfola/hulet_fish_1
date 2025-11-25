@@ -83,13 +83,17 @@ const TourDetail = () => {
       if (!isAuthenticated || !tour) return setHasBooked(false);
       try {
         const resp = await bookingsAPI.getMyBookings();
-        // normalize response to array of bookings
+        // backend returns: { status: 'success', results: N, data: { bookings: [...] } }
         let bookingsList: any[] = [];
-        if (Array.isArray(resp)) bookingsList = resp;
-        else if (Array.isArray((resp as any).data))
+        if (Array.isArray(resp)) {
+          bookingsList = resp;
+        } else if (resp?.data?.bookings && Array.isArray(resp.data.bookings)) {
+          bookingsList = resp.data.bookings;
+        } else if (Array.isArray((resp as any).data)) {
           bookingsList = (resp as any).data;
-        else if (Array.isArray((resp as any).data?.data))
-          bookingsList = (resp as any).data.data;
+        } else if (Array.isArray((resp as any).bookings)) {
+          bookingsList = (resp as any).bookings;
+        }
 
         const tourId = tour._id ?? tour.id ?? tour;
         const found = bookingsList.find((b: any) => {

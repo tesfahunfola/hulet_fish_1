@@ -17,21 +17,23 @@ const bookingRouter = require('./routes/bookingRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const communityMetricsRouter = require('./routes/communityMetricsRoutes');
 const emissionRouter = require('./routes/emissionRoutes');
+const recommendRouter = require('./routes/recommend');
 
 const app = express();
 
 // 1) GLOBAL MIDDLEWARES
 // Enable CORS
 // Configure CORS origins from FRONTEND_URL (comma-separated) or fall back to common localhost dev origins
-const allowedOrigins = process.env.FRONTEND_URL
-  ? process.env.FRONTEND_URL.split(',').map(s => s.trim())
-  : [
-      'http://localhost:8080',
-      'http://localhost:5173',
-      'http://localhost:3000',
-      'http://127.0.0.1:8080',
-      'https://hulet-fish-1-ofen.vercel.app'
-    ];
+// Note: Currently using origin: true to allow all origins
+// const allowedOrigins = process.env.FRONTEND_URL
+//   ? process.env.FRONTEND_URL.split(',').map(s => s.trim())
+//   : [
+//       'http://localhost:8080',
+//       'http://localhost:5173',
+//       'http://localhost:3000',
+//       'http://127.0.0.1:8080',
+//       'https://hulet-fish-1-ofen.vercel.app'
+//     ];
 
 app.use(
   cors({
@@ -107,6 +109,7 @@ app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/bookings', bookingRouter);
 app.use('/api/v1/community-metrics', communityMetricsRouter);
 app.use('/api/v1/emissions', emissionRouter);
+app.use('/api/v1/recommend', recommendRouter);
 
 // SPA fallback: serve index.html for all non-API routes (allows client-side routing)
 // This handles direct access or reload on routes like /login, /signup, etc.
