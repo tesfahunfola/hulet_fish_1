@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -81,32 +83,42 @@ const EcoScore = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading your eco scores...</p>
+      <>
+        <Navigation />
+        <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+              <p className="mt-4 text-gray-600">Loading your eco scores...</p>
+            </div>
           </div>
         </div>
-      </div>
+        <Footer />
+      </>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center py-12">
-            <p className="text-red-600">Failed to load eco scores. Please try again.</p>
+      <>
+        <Navigation />
+        <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center py-12">
+              <p className="text-red-600">Failed to load eco scores. Please try again.</p>
+            </div>
           </div>
         </div>
-      </div>
+        <Footer />
+      </>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
-      <div className="max-w-6xl mx-auto">
+    <>
+      <Navigation />
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
+        <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
@@ -272,6 +284,8 @@ const EcoScore = () => {
         )}
       </div>
     </div>
+    <Footer />
+    </>
   );
 };
 
