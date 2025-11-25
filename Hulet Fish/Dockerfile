@@ -29,6 +29,7 @@ COPY --from=builder --chown=appuser:appgroup /app/node_modules ./node_modules
 COPY --from=builder --chown=appuser:appgroup /app/controllers ./controllers
 COPY --from=builder --chown=appuser:appgroup /app/models ./models
 COPY --from=builder --chown=appuser:appgroup /app/routes ./routes
+COPY --from=builder --chown=appuser:appgroup /app/services ./services
 COPY --from=builder --chown=appuser:appgroup /app/utils ./utils
 COPY --from=builder --chown=appuser:appgroup /app/public ./public
 COPY --from=builder --chown=appuser:appgroup /app/views ./views
