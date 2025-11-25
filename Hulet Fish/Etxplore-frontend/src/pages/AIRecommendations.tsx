@@ -45,44 +45,128 @@ const AIRecommendations = () => {
       try {
         const response = await toursAPI.getAll();
         const tours = response.data?.tours || response.tours || [];
-        setAvailableTours(tours);
+        
+        if (tours.length > 0) {
+          setAvailableTours(tours);
+        } else {
+          // Use expanded fallback if no tours in database
+          setAvailableTours(getDefaultExperiences());
+        }
       } catch (error) {
         console.error('Failed to fetch tours:', error);
-        toast({
-          title: 'Info',
-          description: 'Using sample experiences. Could not load tours from database.',
-          variant: 'default'
-        });
-        // Fallback to sample data if API fails
-        setAvailableTours([
-          {
-            name: 'Lalibela Rock-Hewn Churches',
-            description: 'Explore 11 medieval monolithic churches carved from rock in the 12th century. UNESCO World Heritage Site with incredible spiritual significance.'
-          },
-          {
-            name: 'Traditional Ethiopian Coffee Ceremony',
-            description: 'Participate in an authentic Ethiopian coffee ceremony with locals, learning about coffee culture and traditional preparation methods.'
-          },
-          {
-            name: 'Simien Mountains Trekking',
-            description: 'Trek through dramatic landscapes with unique wildlife including gelada baboons and Ethiopian wolves. UNESCO World Heritage natural site.'
-          },
-          {
-            name: 'Axum Archaeological Sites',
-            description: 'Discover ancient obelisks, royal tombs, and the legendary home of the Ark of the Covenant. Explore ancient Ethiopian civilization.'
-          },
-          {
-            name: 'Lake Tana Monasteries Tour',
-            description: 'Visit ancient island monasteries on Lake Tana, featuring beautiful religious art, illuminated manuscripts, and peaceful settings.'
-          }
-        ]);
+        // Use expanded fallback if API fails
+        setAvailableTours(getDefaultExperiences());
       } finally {
         setIsLoadingTours(false);
       }
     };
 
     fetchTours();
-  }, [toast]);
+  }, []);
+
+  // Expanded default experiences
+  const getDefaultExperiences = (): Tour[] => [
+    {
+      name: 'Lalibela Rock-Hewn Churches',
+      description: 'Explore 11 medieval monolithic churches carved from rock in the 12th century. UNESCO World Heritage Site with incredible engineering and spiritual significance. Marvel at the architectural wonders created without modern tools.'
+    },
+    {
+      name: 'Traditional Ethiopian Coffee Ceremony',
+      description: 'Participate in an authentic Ethiopian coffee ceremony with locals, learning about the birthplace of coffee and traditional preparation methods. Experience the cultural significance of coffee in Ethiopian society.'
+    },
+    {
+      name: 'Simien Mountains Trekking',
+      description: 'Trek through dramatic landscapes with unique wildlife including gelada baboons and Ethiopian wolves. UNESCO World Heritage natural site featuring stunning escarpments, deep valleys, and incredible biodiversity.'
+    },
+    {
+      name: 'Axum Archaeological Sites',
+      description: 'Discover ancient obelisks, royal tombs, and the legendary home of the Ark of the Covenant. Explore one of Africa\'s oldest civilizations and learn about the Kingdom of Axum\'s rich history and influence.'
+    },
+    {
+      name: 'Lake Tana Monasteries Tour',
+      description: 'Visit ancient island monasteries on Lake Tana, featuring beautiful religious art, illuminated manuscripts, and peaceful settings. Explore the source of the Blue Nile and discover centuries-old Christian traditions.'
+    },
+    {
+      name: 'Gondar Royal Enclosure',
+      description: 'Tour medieval castles and palaces of Ethiopian emperors, showcasing unique architectural blend of Portuguese, Indian, and local styles. Visit the Fasil Ghebbi fortress-city and the famous Debre Birhan Selassie Church.'
+    },
+    {
+      name: 'Harar Old Town Walking Tour',
+      description: 'Wander through the ancient walled city with 82 mosques and distinctive jugol wall. Experience the famous hyena feeding ceremony at night and explore one of Islam\'s holiest cities with its unique culture.'
+    },
+    {
+      name: 'Danakil Depression Expedition',
+      description: 'Visit one of Earth\'s most extreme environments with active volcanoes, sulfur springs, and colorful mineral deposits. Witness Erta Ale\'s lava lake and the stunning Dallol hydrothermal field.'
+    },
+    {
+      name: 'Bale Mountains National Park Safari',
+      description: 'Trek through afro-alpine moorlands to spot the rare Ethiopian wolf and mountain nyala. Experience diverse ecosystems from tropical forests to glacial valleys in this biodiversity hotspot.'
+    },
+    {
+      name: 'Addis Ababa City Cultural Tour',
+      description: 'Explore Ethiopia\'s capital including the National Museum (home of Lucy), Holy Trinity Cathedral, and bustling Mercato market. Experience modern Ethiopian culture, cuisine, and vibrant nightlife.'
+    },
+    {
+      name: 'Omo Valley Tribal Experience',
+      description: 'Visit indigenous tribes in the Lower Omo Valley including the Mursi, Hamer, and Karo people. Experience unique cultural traditions, ceremonies, and ways of life that have remained unchanged for centuries.'
+    },
+    {
+      name: 'Blue Nile Falls (Tis Issat)',
+      description: 'Visit the spectacular Blue Nile Falls, known locally as "Tis Issat" or "smoking water". Experience the power and beauty of one of Africa\'s greatest waterfalls during the rainy season.'
+    },
+    {
+      name: 'Tigray Rock Churches Circuit',
+      description: 'Climb to ancient rock-hewn churches perched on cliff faces in Tigray region. Discover stunning frescoes, ancient manuscripts, and breathtaking views while exploring this lesser-known spiritual heritage.'
+    },
+    {
+      name: 'Awash National Park Wildlife Safari',
+      description: 'Explore Ethiopia\'s oldest national park featuring Awash Falls, hot springs, and diverse wildlife including oryx, kudus, and numerous bird species. Experience the dramatic Awash River gorge.'
+    },
+    {
+      name: 'Sof Omar Caves Exploration',
+      description: 'Discover one of the world\'s longest cave systems formed by the Web River. Marvel at spectacular limestone formations, underground chambers, and the spiritual significance to local communities.'
+    },
+    {
+      name: 'Dire Dawa and Historic Railway Tour',
+      description: 'Explore Ethiopia\'s second-largest city with its unique blend of Ethiopian and French colonial architecture. Visit the historic railway station and experience the vibrant multicultural atmosphere.'
+    },
+    {
+      name: 'Ethiopian Cooking Class Experience',
+      description: 'Learn to prepare traditional Ethiopian dishes like injera, doro wat, and kitfo. Master the art of Ethiopian spice blends and discover the rich culinary traditions of Ethiopian cuisine.'
+    },
+    {
+      name: 'Abijatta-Shalla Lakes National Park',
+      description: 'Visit twin Rift Valley lakes known for flamingo populations and diverse birdlife. Explore hot springs, volcanic landscapes, and enjoy birdwatching in this unique ecosystem.'
+    },
+    {
+      name: 'Debre Damo Monastery Adventure',
+      description: 'Climb a rope to reach this ancient monastery accessible only to men, perched atop a flat-topped mountain. Experience one of Ethiopia\'s most sacred and isolated religious sites with stunning architecture.'
+    },
+    {
+      name: 'Addis Ababa Jazz Club Night',
+      description: 'Experience the vibrant Ethio-jazz scene at famous venues. Enjoy live music blending traditional Ethiopian melodies with modern jazz, created by legendary artists like Mulatu Astatke.'
+    },
+    {
+      name: 'Meskel Festival Celebration',
+      description: 'Join the UNESCO-recognized Meskel festival celebrating the finding of the True Cross. Experience colorful processions, traditional dancing, and the spectacular demera bonfire ceremony.'
+    },
+    {
+      name: 'Timkat (Epiphany) Festival Experience',
+      description: 'Witness Ethiopia\'s most important religious festival celebrating the baptism of Jesus. Experience colorful processions, sacred ceremonies, and traditional celebrations across the country.'
+    },
+    {
+      name: 'Wenchi Crater Lake Horseback Riding',
+      description: 'Ride horses around the beautiful Wenchi Crater Lake, visit hot springs, and explore monasteries on islands. Enjoy stunning views and peaceful nature in this volcanic crater.'
+    },
+    {
+      name: 'Amhara Traditional Weaving Workshop',
+      description: 'Learn traditional Ethiopian weaving techniques and create your own textile. Discover the cultural significance of Ethiopian fabrics and support local artisan communities.'
+    },
+    {
+      name: 'Entoto Mountain Hike and Eucalyptus Forest',
+      description: 'Hike through eucalyptus forests to reach panoramic views of Addis Ababa. Visit historic churches and the palace of Emperor Menelik II while enjoying fresh mountain air.'
+    }
+  ];
 
   const handleGetRecommendations = async () => {
     if (availableTours.length === 0) {
