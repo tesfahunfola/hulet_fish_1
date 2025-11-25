@@ -24,4 +24,13 @@ router.post('/verify', bookingController.verifyPayment);
 // 🔹 Get current user's bookings
 router.get('/me', authController.protect, bookingController.getMyBookings);
 
+// 🔹 Create test booking (development only)
+if (process.env.NODE_ENV !== 'production') {
+  router.post(
+    '/test-booking/:tourId',
+    authController.protect,
+    bookingController.createTestBooking
+  );
+}
+
 module.exports = router;

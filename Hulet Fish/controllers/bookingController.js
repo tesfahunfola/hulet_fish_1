@@ -254,3 +254,40 @@ exports.getMyBookings = catchAsync(async (req, res, next) => {
     .status(200)
     .json({ status: 'success', results: bookings.length, data: { bookings } });
 });
+
+exports.createTestBooking = catchAsync(async (req, res, next) => {
+  // 1️⃣ Get the tour
+  const tour = await Tour.findById(req.params.tourId);
+  if (!tour) {
+    return next(new AppError('No tour found with that ID', 404));
+  }
+
+  // 2️⃣ Check if user already has a booking for this tour
+  const existingBooking = await Booking.findOne({
+    tour: tour._id,
+    user: req.user._id
+  });
+
+  if (existingBooking) {
+    return res.status(200).json({
+      status: 'success',
+      message: 'Booking already exists',
+      data: { booking: existingBooking }
+    });
+  }
+
+  // 3️⃣ Create test booking
+  const booking = await Booking.create({
+    tour: tour._id,
+    user: req.user._id,
+    price: tour.price,
+    paid: true,
+    txRef: `test-${Date.now()}`
+  });
+
+  res.status(201).json({
+    status: 'success',
+    message: 'Test booking created successfully',
+    data: { booking }
+  });
+});

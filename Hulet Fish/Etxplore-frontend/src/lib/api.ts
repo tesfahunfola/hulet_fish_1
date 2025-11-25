@@ -290,6 +290,11 @@ export const bookingsAPI = {
     const response = await api.get(`/bookings/checkout-session/${tourId}`);
     return response.data;
   },
+  createTestBooking: async (tourId: string) => {
+    // Development only - creates a test booking without payment
+    const response = await api.post(`/bookings/test-booking/${tourId}`);
+    return response.data;
+  },
   verify: async (txRef: string) => {
     const response = await api.get(`/bookings/verify/${txRef}`);
     return response.data;

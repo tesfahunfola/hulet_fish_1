@@ -732,53 +732,97 @@ const TourDetail = () => {
                         <Check className="w-4 h-4 mr-2 inline-block" /> Booked
                       </Button>
                     ) : (
-                      <Button
-                        variant="hero"
-                        size="xl"
-                        className="w-full mb-3"
-                        onClick={async () => {
-                          if (!isAuthenticated) {
-                            toast({
-                              title: 'Login Required',
-                              description: 'Please login to book this tour',
-                              variant: 'destructive'
-                            });
-                            navigate('/login');
-                            return;
-                          }
-
-                          try {
-                            toast({
-                              title: 'Redirecting to payment...',
-                              description:
-                                'You will be redirected to complete payment'
-                            });
-                            const resp = await bookingsAPI.create(id as string);
-                            const checkoutUrl =
-                              resp.checkout_url || resp.data?.checkout_url;
-                            if (checkoutUrl) {
-                              // redirect browser to checkout
-                              window.location.href = checkoutUrl;
-                            } else {
-                              throw new Error(
-                                'No checkout URL returned from server'
-                              );
+                      <>
+                        <Button
+                          variant="hero"
+                          size="xl"
+                          className="w-full mb-3"
+                          onClick={async () => {
+                            if (!isAuthenticated) {
+                              toast({
+                                title: 'Login Required',
+                                description: 'Please login to book this tour',
+                                variant: 'destructive'
+                              });
+                              navigate('/login');
+                              return;
                             }
-                          } catch (err) {
-                            console.error('Booking init failed:', err);
-                            toast({
-                              title: 'Error',
-                              description:
-                                err.response?.data?.message ||
-                                err.message ||
-                                'Failed to initiate booking',
-                              variant: 'destructive'
-                            });
-                          }
-                        }}
-                      >
-                        Join Experience
-                      </Button>
+
+                            try {
+                              toast({
+                                title: 'Redirecting to payment...',
+                                description:
+                                  'You will be redirected to complete payment'
+                              });
+                              const resp = await bookingsAPI.create(id as string);
+                              const checkoutUrl =
+                                resp.checkout_url || resp.data?.checkout_url;
+                              if (checkoutUrl) {
+                                // redirect browser to checkout
+                                window.location.href = checkoutUrl;
+                              } else {
+                                throw new Error(
+                                  'No checkout URL returned from server'
+                                );
+                              }
+                            } catch (err) {
+                              console.error('Booking init failed:', err);
+                              toast({
+                                title: 'Error',
+                                description:
+                                  err.response?.data?.message ||
+                                  err.message ||
+                                  'Failed to initiate booking',
+                                variant: 'destructive'
+                              });
+                            }
+                          }}
+                        >
+                          Join Experience
+                        </Button>
+                        {import.meta.env.MODE === 'development' && (
+                          <Button
+                            variant="outline"
+                            size="lg"
+                            className="w-full mb-3"
+                            onClick={async () => {
+                              if (!isAuthenticated) {
+                                toast({
+                                  title: 'Login Required',
+                                  description: 'Please login to book this tour',
+                                  variant: 'destructive'
+                                });
+                                navigate('/login');
+                                return;
+                              }
+
+                              try {
+                                const resp = await bookingsAPI.createTestBooking(
+                                  id as string
+                                );
+                                toast({
+                                  title: 'Test Booking Created!',
+                                  description: 'Check "My Bookings" to see it'
+                                });
+                                // Refresh the page to show "Booked" button
+                                window.location.reload();
+                              } catch (err) {
+                                console.error('Test booking failed:', err);
+                                toast({
+                                  title: 'Error',
+                                  description:
+                                    err.response?.data?.message ||
+                                    err.message ||
+                                    'Failed to create test booking',
+                                  variant: 'destructive'
+                                });
+                              }
+                            }}
+                          >
+                            🧪 Test Booking (Dev)
+                          </Button>
+                        )}
+                      </>
                     )}
                     <Button
                       variant="outline"
