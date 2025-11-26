@@ -29,14 +29,18 @@ A full-stack web application for exploring Ethiopia's rich cultural heritage and
   - Automatic duplicate prevention
 
 ## 🌟 Screenshots
-<img width="960" height="564" alt="1Screenshot 2025-11-17 125932" src="https://github.com/user-attachments/assets/e565e75b-f5be-4b15-8abd-d7e8cd78dd76" />
 
-<img width="960" height="564" alt="2Screenshot 2025-11-17 130018" src="https://github.com/user-attachments/assets/bc2aee49-03c8-4e07-9949-d8a0344ac5fb" />
-<img width="960" height="564" alt="3Screenshot 2025-11-17 130124" src="https://github.com/user-attachments/assets/a101fe1a-8521-4c8a-81e1-71cf4249c612" />
-<img width="960" height="564" alt="4Screenshot 2025-11-17 130320" src="https://github.com/user-attachments/assets/4c36408e-da67-4f4f-af3e-3aa81252a6f9" />
+<img width="1920" height="1128" alt="1Screenshot  162628" src="https://github.com/user-attachments/assets/2dfc52cc-cd3c-42f7-81e5-c8b597809b33" />
+<img width="1920" height="1128" alt="2Screenshot  162815" src="https://github.com/user-attachments/assets/07bf5ca1-a0b4-4f54-a78b-afdcf6e61856" />
+<img width="1920" height="1128" alt="3Screenshot  162834" src="https://github.com/user-attachments/assets/66bba6e2-c294-4c39-a70f-4ab1caecf4ee" />
+
+<img width="1920" height="1128" alt="4Screenshot 162855" src="https://github.com/user-attachments/assets/1e291d0e-2f4b-4d74-9ac7-409c43456bea" />
+
+<img width="1920" height="1128" alt="5Screenshot  162909" src="https://github.com/user-attachments/assets/98d6820e-6ecc-44b2-a744-6e3e631315e6" />
+
+<img width="1920" height="1128" alt="6Screenshot 162932" src="https://github.com/user-attachments/assets/6578be27-a759-4158-8948-e099ba22fabe" />
 
 
-<img width="960" height="564" alt="5Screenshot 2025-11-17 130528" src="https://github.com/user-attachments/assets/8742d5f2-d92b-44e8-a987-e797605c1c28" />
 ## 🛠️ Tech Stack
 
 ### Backend
