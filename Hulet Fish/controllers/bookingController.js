@@ -16,9 +16,17 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 
   // 3️⃣ Chapa API payload (use nested objects for customization/meta)
   const chapaUrl = 'https://api.chapa.co/v1/transaction/initialize';
-  const frontendBase = process.env.FRONTEND_URL
-    ? process.env.FRONTEND_URL.replace(/\/$/, '')
-    : 'http://localhost:8080';
+  
+  // Get frontend URL - prefer production Vercel URL if available
+  let frontendBase = 'http://localhost:8080';
+  if (process.env.FRONTEND_URL) {
+    const urls = process.env.FRONTEND_URL.split(',').map(url => url.trim());
+    // Find the production Vercel URL (contains vercel.app) or use the first URL
+    const productionUrl = urls.find(url => url.includes('vercel.app') && !url.includes('localhost'));
+    frontendBase = productionUrl || urls[0];
+  }
+  frontendBase = frontendBase.replace(/\/$/, '');
+  
   // Include txRef in the return URL so frontend can trigger verification if
   // the server-to-server callback is delayed or missing.
   const returnUrl = `${frontendBase}/my-bookings?tx_ref=${encodeURIComponent(
