@@ -15,8 +15,9 @@ if (!GEMINI_API_KEY) {
  */
 async function getEmbedding(input) {
   try {
+    // Try v1 endpoint first (newer)
     const response = await axios.post(
-      `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1/models/text-embedding-004:embedContent?key=${GEMINI_API_KEY}`,
       {
         model: 'models/text-embedding-004',
         content: {
@@ -39,6 +40,14 @@ async function getEmbedding(input) {
     }
     throw new Error('Invalid embedding response format from Gemini');
   } catch (error) {
+    // Log more details for debugging
+    if (error.response) {
+      console.error('Gemini API Error:', {
+        status: error.response.status,
+        statusText: error.response.statusText,
+        data: error.response.data
+      });
+    }
     throw new Error(`Failed to get embedding from Gemini: ${error.message}`);
   }
 }

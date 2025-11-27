@@ -141,4 +141,3 @@ bookingSchema.post('save', async function(doc) {
 const Booking = mongoose.model('Booking', bookingSchema);
 
 module.exports = Booking;
-
