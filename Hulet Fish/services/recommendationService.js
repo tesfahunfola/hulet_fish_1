@@ -13,6 +13,16 @@ async function generateRecommendations(
   userReviews,
   experiencesDatabase
 ) {
+  // Validate inputs
+  if (!experiencesDatabase || experiencesDatabase.length === 0) {
+    throw new Error('No experiences available for recommendations');
+  }
+
+  console.log(`Generating recommendations for ${experiencesDatabase.length} experiences`);
+  console.log('User interests:', userProfile.interests);
+  console.log('Travel style:', userProfile.travelStyle);
+  console.log('Budget:', userProfile.budget);
+
   try {
     // 1. Combine userProfile + reviews into a single text for embedding
     const userProfileText = JSON.stringify(userProfile);
@@ -22,7 +32,14 @@ ${userReviews.join('\n')}
 `;
 
     // 2. Get embedding for user profile + reviews
-    const userEmbedding = await geminiClient.getEmbedding(combinedText);
+    let userEmbedding;
+    try {
+      userEmbedding = await geminiClient.getEmbedding(combinedText);
+      console.log('✓ User embedding generated successfully');
+    } catch (embErr) {
+      console.error('✗ Failed to get user embedding:', embErr.message);
+      throw embErr;
+    }
 
     // 3. Embed each experience and calculate similarity score
     const experienceEmbeddings = await Promise.all(
@@ -102,22 +119,80 @@ Return JSON array ONLY with the fields:
     }));
   } catch (error) {
     console.error('Error in generateRecommendations:', error.message);
+    console.error('Stack:', error.stack);
     
-    // Ultimate fallback: return simple ranked list without embeddings
+    // Ultimate fallback: return intelligent ranked list based on keyword matching
     if (experiencesDatabase && experiencesDatabase.length > 0) {
-      const interests = userProfile.interests && userProfile.interests.length > 0 
-        ? userProfile.interests.join(', ') 
-        : 'cultural experiences';
+      const interests = userProfile.interests || [];
+      const travelStyle = (userProfile.travelStyle || '').toLowerCase();
+      const preferences = (userProfile.preferences || '').toLowerCase();
       
-      return experiencesDatabase.slice(0, 5).map((exp, idx) => ({
+      // Score experiences based on keyword matching
+      const scoredExps = experiencesDatabase.map(exp => {
+        let score = 0.5; // Base score
+        const expText = `${exp.title} ${exp.description || ''}`.toLowerCase();
+        
+        // Match interests
+        interests.forEach(interest => {
+          if (expText.includes(interest.toLowerCase())) {
+            score += 0.15;
+          }
+        });
+        
+        // Match travel style
+        if (travelStyle && expText.includes(travelStyle)) {
+          score += 0.1;
+        }
+        
+        // Match preferences keywords
+        const prefKeywords = preferences.split(/\s+/);
+        prefKeywords.forEach(keyword => {
+          if (keyword.length > 3 && expText.includes(keyword)) {
+            score += 0.05;
+          }
+        });
+        
+        return { ...exp, score };
+      });
+      
+      // Sort by score and take top 10 for more variety
+      const topExps = scoredExps
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 10);
+      
+      // Generate diverse explanations
+      const interestsText = interests.length > 0 ? interests.join(', ') : 'exploring Ethiopia';
+      
+      return topExps.map((exp, idx) => ({
         title: exp.title,
-        match_score: 0.8 - (idx * 0.1), // Decreasing scores
-        why: `Recommended based on your interests in ${interests}.`
+        match_score: Math.min(0.95, exp.score),
+        why: generateSmartReason(exp, userProfile, idx)
       }));
     }
     
     throw new Error(`Failed to generate recommendations: ${error.message}`);
   }
+}
+
+function generateSmartReason(experience, userProfile, index) {
+  const interests = userProfile.interests || [];
+  const travelStyle = userProfile.travelStyle || 'adventure';
+  const budget = userProfile.budget || 'medium';
+  
+  const reasons = [
+    `Perfect match for your ${travelStyle} style and interest in ${interests[0] || 'culture'}.`,
+    `Aligns with your ${budget} budget and passion for ${interests[1] || interests[0] || 'exploration'}.`,
+    `Great fit for travelers seeking ${interests[0] || 'authentic experiences'} with a ${travelStyle} approach.`,
+    `Recommended for your interest in ${interests[2] || interests[1] || interests[0] || 'Ethiopian culture'}.`,
+    `Ideal for ${travelStyle} enthusiasts interested in ${interests[0] || 'cultural immersion'}.`,
+    `Matches your preference for ${budget}-budget ${travelStyle} experiences.`,
+    `Excellent choice for those passionate about ${interests[1] || interests[0] || 'discovery'}.`,
+    `Well-suited to your ${travelStyle} travel style and cultural interests.`,
+    `Perfect for exploring ${interests[0] || 'Ethiopia'} in an authentic way.`,
+    `Great option for ${budget}-budget travelers seeking ${interests[0] || 'adventure'}.`
+  ];
+  
+  return reasons[index % reasons.length];
 }
 
 module.exports = {
