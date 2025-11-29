@@ -1,4 +1,4 @@
-# Etxplore - Explore Ethiopia Sustainably
+# Hulet-Fish - Explore Ethiopia Sustainably
 
 A full-stack web application for exploring Ethiopia's rich cultural heritage and natural wonders while promoting sustainable tourism through carbon offset, eco-score features, and AI-powered recommendations.
 
